@@ -1,4 +1,4 @@
-package com.kbank.springbatch;
+package com.example.demo;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -27,27 +27,29 @@ public class JobConfiguration {
 				.next(step2())
 				.build();
 	}
-
+	
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
 				.tasklet(new Tasklet() {
+					
 					@Override
 					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-						System.out.println("step1 was executed");
+						System.out.println("step1 has been executed!");
 						return RepeatStatus.FINISHED;
 					}
 				})
 				.build();
 	}
-
+	
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
 				.tasklet(new Tasklet() {
+					
 					@Override
 					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-						System.out.println("step2 was executed");
+						System.out.println("step2 has been executed!");
 						return RepeatStatus.FINISHED;
 					}
 				})
