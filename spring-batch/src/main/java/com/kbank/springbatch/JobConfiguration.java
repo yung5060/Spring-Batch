@@ -8,22 +8,17 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import lombok.RequiredArgsConstructor;
 
 @Configuration
-public class DBJobConfiguration {
+@RequiredArgsConstructor
+public class JobConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	
-	@Autowired
-	public DBJobConfiguration(JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory) {
-		this.jobBuilderFactory = jobBuilderFactory;
-		this.stepBuilderFactory = stepBuilderFactory;
-	}
 	
 	@Bean
 	public Job job() {
@@ -32,12 +27,11 @@ public class DBJobConfiguration {
 				.next(step2())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
 				.tasklet(new Tasklet() {
-					
 					@Override
 					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 						System.out.println("step1 was executed");
@@ -46,12 +40,11 @@ public class DBJobConfiguration {
 				})
 				.build();
 	}
-	
+
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
 				.tasklet(new Tasklet() {
-					
 					@Override
 					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 						System.out.println("step2 was executed");
