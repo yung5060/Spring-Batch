@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.kbank.eai.springbatch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
