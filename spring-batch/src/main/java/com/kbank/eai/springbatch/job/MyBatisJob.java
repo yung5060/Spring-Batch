@@ -10,16 +10,20 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
 
 import com.kbank.eai.springbatch.listener.MyBatisChunkListener;
 import com.kbank.eai.springbatch.model.User;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class MyBatisJob {
@@ -63,6 +67,7 @@ public class MyBatisJob {
         return stepBuilderFactory.get("myBatisStep")
                 .<User,User>chunk(chunkSize)
                 .reader(reader())
+                .processor(processor())
                 .writer(writer())
                 .listener(listener)
                 .build();
@@ -76,12 +81,25 @@ public class MyBatisJob {
         reader.setQueryId("Source.findAll");
         return reader;
     }
+    
+    @Bean
+    public ItemProcessor<User, User> processor() {
+    	return new ItemProcessor<User, User>() {
+    		@Override
+    		public User process(@NonNull User user) throws Exception {
+    			user.setEmail(user.getEmail().replaceFirst("now", "withu"));
+    			log.info(user.getName() + " processed!");
+    			return user;
+    		}
+		};
+    }
 
     @Bean
     public MyBatisBatchItemWriter<User> writer() throws Exception {
         MyBatisBatchItemWriter<User> writer = new MyBatisBatchItemWriter<>();
         writer.setSqlSessionFactory(sqlSessionFactory_DST());
         writer.setStatementId("Destination.insert");
+//        log.info();
         return writer;
     }
 }
