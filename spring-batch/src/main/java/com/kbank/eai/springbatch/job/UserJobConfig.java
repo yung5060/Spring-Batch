@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class MyBatisJob {
+public class UserJobConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -37,7 +37,7 @@ public class MyBatisJob {
     @Qualifier("dstDataSource")
     private final DataSource dstDataSource;
 
-    private final static int chunkSize = 3;
+    private final static int chunkSize = 2;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {
@@ -56,15 +56,15 @@ public class MyBatisJob {
     }
 
     @Bean
-    public Job job() throws Exception {
-        return jobBuilderFactory.get("myBatisJob")
-                .start(step())
+    public Job userJob() throws Exception {
+        return jobBuilderFactory.get("userJob")
+                .start(userStep())
                 .build();
     }
 
     @Bean
-    public Step step() throws Exception {
-        return stepBuilderFactory.get("myBatisStep")
+    public Step userStep() throws Exception {
+        return stepBuilderFactory.get("userStep")
                 .<User,User>chunk(chunkSize)
                 .reader(reader())
                 .processor(processor())

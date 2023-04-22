@@ -10,13 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Component
-public class MyBatisChunkListener implements ChunkListener{
+public class MyBatisChunkListener implements ChunkListener {
 
     @Override
     public void beforeChunk(ChunkContext context) {
-    	StepContext stepContext = context.getStepContext();
+        StepContext stepContext = context.getStepContext();
         StepExecution stepExecution = stepContext.getStepExecution();
-//        log.info("##### beforeChunk : " + stepExecution.getReadCount());
+        // log.info("##### beforeChunk : " + stepExecution.getReadCount());
     }
 
     @Override
@@ -28,9 +28,9 @@ public class MyBatisChunkListener implements ChunkListener{
 
     @Override
     public void afterChunkError(ChunkContext context) {
-    	StepContext stepContext = context.getStepContext();
+        StepContext stepContext = context.getStepContext();
         StepExecution stepExecution = stepContext.getStepExecution();
-//        log.info("##### afterChunkError : " + stepExecution.getRollbackCount());
+        // log.info("##### afterChunkError : " + stepExecution.getRollbackCount());
     }
-    
+
 }

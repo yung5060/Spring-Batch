@@ -8,7 +8,7 @@ jdbc:
     
     - system: LOG
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/yungdb?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8
       username: yung
       password: 1234
     

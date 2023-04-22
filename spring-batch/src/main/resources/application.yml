@@ -8,6 +8,6 @@ spring:
       path: /h2-console
   batch:
     jdbc:
-      initialize-schema: embedded
+      initialize-schema: never
     job:
       names: ${job.name:NONE}
