@@ -14,8 +14,8 @@ public class MyBatisChunkListener implements ChunkListener {
 
     @Override
     public void beforeChunk(ChunkContext context) {
-        StepContext stepContext = context.getStepContext();
-        StepExecution stepExecution = stepContext.getStepExecution();
+        // StepContext stepContext = context.getStepContext();
+        // StepExecution stepExecution = stepContext.getStepExecution();
         // log.info("##### beforeChunk : " + stepExecution.getReadCount());
     }
 
@@ -28,8 +28,8 @@ public class MyBatisChunkListener implements ChunkListener {
 
     @Override
     public void afterChunkError(ChunkContext context) {
-        StepContext stepContext = context.getStepContext();
-        StepExecution stepExecution = stepContext.getStepExecution();
+        // StepContext stepContext = context.getStepContext();
+        // StepExecution stepExecution = stepContext.getStepExecution();
         // log.info("##### afterChunkError : " + stepExecution.getRollbackCount());
     }
 

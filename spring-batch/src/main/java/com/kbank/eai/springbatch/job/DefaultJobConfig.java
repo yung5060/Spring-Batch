@@ -7,6 +7,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import lombok.RequiredArgsConstructor;
 
@@ -18,11 +19,13 @@ public class DefaultJobConfig {
 	private final StepBuilderFactory stepBuilderFactory;
 	
 	@Bean
+	@Primary
 	public Job defaultJob() {
 		return jobBuilderFactory.get("defaultJob")
 				.start(defaultStep1())
 				.next(defaultStep2())
 				.next(defaultStep3())
+				.next(defaultStep4())
 				.build();
 	}
 	
@@ -31,6 +34,7 @@ public class DefaultJobConfig {
 		return stepBuilderFactory.get("defaultStep1")
 				.tasklet((contribution, chunkContext) -> {
 					System.out.println(">> step1 has been executed");
+					Thread.sleep(3000);
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -52,6 +56,16 @@ public class DefaultJobConfig {
 		return stepBuilderFactory.get("defaultStep3")
 				.tasklet((contribution, chunkContext) -> {
 					System.out.println(">> step3 has been executed");
+					return RepeatStatus.FINISHED;
+				})
+				.build();
+	}
+	
+	@Bean
+	public Step defaultStep4() {
+		return stepBuilderFactory.get("defaultStep4")
+				.tasklet((contribution, chunkContext) -> {
+					System.out.println(">> step4 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();

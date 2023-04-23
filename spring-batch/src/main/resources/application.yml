@@ -1,6 +1,6 @@
 server:
   port: 8000
- 
+
 spring:
   h2:
     console:
@@ -8,6 +8,7 @@ spring:
       path: /h2-console
   batch:
     jdbc:
-      initialize-schema: never
+      initialize-schema: embedded
     job:
-      names: ${job.name:NONE}
+      # names: ${job.name:NONE}
+      enabled: false

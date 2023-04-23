@@ -25,7 +25,7 @@ public class DataSourceConfig {
 	@Bean
 	public DataSource dataSource() throws SQLException {
 		DataSource ds = null;
-		return findDs("LOG", ds);
+		return findDs("LOCAL", ds);
 	}
 
 //	@Bean(name = "logDataSource")
