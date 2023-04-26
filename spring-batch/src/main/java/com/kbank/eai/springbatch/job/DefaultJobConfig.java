@@ -4,6 +4,8 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.job.builder.FlowBuilder;
+import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -26,6 +28,15 @@ public class DefaultJobConfig {
 				.next(defaultStep2())
 				.next(defaultStep3())
 				.next(defaultStep4())
+				.build();
+	}
+
+	@Bean
+	public Job defaultJob2() {
+		return jobBuilderFactory.get("defaultJob2")
+				.start(flow1())
+				.next(defaultStep2())
+				.end()
 				.build();
 	}
 	
@@ -69,5 +80,15 @@ public class DefaultJobConfig {
 					return RepeatStatus.FINISHED;
 				})
 				.build();
+	}
+
+	@Bean
+	public Flow flow1() {
+		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow");
+		flowBuilder.start(defaultStep3())
+					.next(defaultStep4())
+					.end();
+
+		return	flowBuilder.build();	
 	}
 }

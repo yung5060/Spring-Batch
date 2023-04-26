@@ -65,7 +65,7 @@ public class UserJobConfig {
     @Bean
     public Step userStep() throws Exception {
         return stepBuilderFactory.get("userStep")
-                .<User,User>chunk(chunkSize)
+                .<User, User>chunk(chunkSize)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
@@ -81,17 +81,17 @@ public class UserJobConfig {
         reader.setQueryId("Source.findAll");
         return reader;
     }
-    
+
     @Bean
     public ItemProcessor<User, User> processor() {
-    	return new ItemProcessor<User, User>() {
-    		@Override
-    		public User process(@NonNull User user) throws Exception {
-    			user.setEmail(user.getEmail().replaceFirst("now", "withu"));
-    			log.info(user.getName() + " processed!");
-    			return user;
-    		}
-		};
+        return new ItemProcessor<User, User>() {
+            @Override
+            public User process(@NonNull User user) throws Exception {
+                user.setEmail(user.getEmail().replaceFirst("now", "withu"));
+                log.info(user.getName() + " processed!");
+                return user;
+            }
+        };
     }
 
     @Bean
@@ -99,7 +99,7 @@ public class UserJobConfig {
         MyBatisBatchItemWriter<User> writer = new MyBatisBatchItemWriter<>();
         writer.setSqlSessionFactory(sqlSessionFactory_DST());
         writer.setStatementId("Destination.insert");
-//        log.info();
+        // log.info();
         return writer;
     }
 }

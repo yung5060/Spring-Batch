@@ -10,5 +10,5 @@ spring:
     jdbc:
       initialize-schema: embedded
     job:
-      # names: ${job.name:NONE}
-      enabled: false
+      names: ${job.name:NONE}
+      enabled: true
