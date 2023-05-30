@@ -8,6 +8,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.kbank.eai.springbatch.util.CustomJobParametersValidator;
+
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -23,6 +25,7 @@ public class SimpleJobConfig {
                 .start(simpleStep1())
                 .next(simpleStep2())
                 .next(simpleStep3())
+                .validator(new CustomJobParametersValidator())
                 .build();
     }
 
