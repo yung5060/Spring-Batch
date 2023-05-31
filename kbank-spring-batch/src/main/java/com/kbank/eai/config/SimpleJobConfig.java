@@ -17,17 +17,17 @@ public class SimpleJobConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	
+
 	@Bean
 	public Job simpleJob() {
 		return jobBuilderFactory.get("simpleJob")
 				.start(simpleStep1())
 				.next(simpleStep2())
-				// .incrementer(new CustomJobParametersIncrementer())
 				.incrementer(new RunIdIncrementer())
+				// .incrementer(new CustomJobParametersIncrementer())
 				.build();
 	}
-	
+
 	@Bean
 	public Step simpleStep1() {
 		return stepBuilderFactory.get("simpleStep1")
@@ -37,7 +37,7 @@ public class SimpleJobConfig {
 				})
 				.build();
 	}
-	
+
 	@Bean
 	public Step simpleStep2() {
 		return stepBuilderFactory.get("simpleStep2")
