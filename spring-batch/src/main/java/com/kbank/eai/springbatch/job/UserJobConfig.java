@@ -32,6 +32,7 @@ public class UserJobConfig {
     private final StepBuilderFactory stepBuilderFactory;
     private final ApplicationContext context;
     private final MyBatisChunkListener listener;
+    
     @Qualifier("srcDataSource")
     private final DataSource srcDataSource;
     @Qualifier("dstDataSource")
