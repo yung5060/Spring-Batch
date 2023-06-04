@@ -24,7 +24,6 @@ public class SimpleJobConfig {
 				.start(simpleStep1())
 				.next(simpleStep2())
 				.incrementer(new RunIdIncrementer())
-				// .incrementer(new CustomJobParametersIncrementer())
 				.build();
 	}
 
