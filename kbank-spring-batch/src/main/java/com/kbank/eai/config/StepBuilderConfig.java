@@ -17,13 +17,12 @@ import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class StepBuilderConfig {
 
