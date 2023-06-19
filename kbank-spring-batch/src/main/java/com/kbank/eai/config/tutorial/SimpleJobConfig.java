@@ -1,4 +1,4 @@
-package com.kbank.eai.config;
+package com.kbank.eai.config.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -7,41 +7,40 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
-public class TaskletStepArchitectConfig {
+public class SimpleJobConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	
+
 	@Bean
-	public Job batchJob() {
-		return jobBuilderFactory.get("batchJob")
+	public Job simpleJob() {
+		return jobBuilderFactory.get("simpleJob")
+				.start(simpleStep1())
+				.next(simpleStep2())
 				.incrementer(new RunIdIncrementer())
-				.start(step1())
-				.next(step2())
 				.build();
 	}
-	
+
 	@Bean
-	public Step step1() {
-		return stepBuilderFactory.get("step1")
+	public Step simpleStep1() {
+		return stepBuilderFactory.get("simpleStep1")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("stepContribution = " + contribution + ", chunkContext = " + chunkContext);
+					System.out.println("simple job 1 executed!");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
 	}
-	
+
 	@Bean
-	public Step step2() {
-		return stepBuilderFactory.get("step2")
+	public Step simpleStep2() {
+		return stepBuilderFactory.get("simpleStep2")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("stepContribution = " + contribution + ", chunkContext = " + chunkContext);
+					System.out.println("simple job 2 executed!");
 					return RepeatStatus.FINISHED;
 				})
 				.build();

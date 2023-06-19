@@ -1,4 +1,4 @@
-package com.kbank.eai.config;
+package com.kbank.eai.config.tutorial;
 
 import java.util.Arrays;
 import java.util.List;
