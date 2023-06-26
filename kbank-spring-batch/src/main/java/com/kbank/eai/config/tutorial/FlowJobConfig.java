@@ -1,4 +1,4 @@
-package com.kbank.eai.config;
+package com.kbank.eai.config.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -9,12 +9,11 @@ import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class FlowJobConfig {
 
