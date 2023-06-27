@@ -2,13 +2,13 @@ server:
   port: 8000
 
 spring:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
   batch:
     jdbc:
-      initialize-schema: embedded
+      initialize-schema: always
     job:
       names: ${job.name:NONE}
       enabled: true

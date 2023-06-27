@@ -6,6 +6,7 @@ import java.sql.Statement;
 
 import javax.sql.DataSource;
 
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,6 +21,7 @@ import lombok.RequiredArgsConstructor;
 public class DataSourceConfig {
 
 	private final YamlConfig yamlConfig;
+	private final StringEncryptor encryptor;
 	
 //	@Primary
 	@Bean
@@ -64,7 +66,7 @@ public class DataSourceConfig {
 						.driverClassName(info.getDriverClassName())
 						.url(info.getUrl())
 						.username(info.getUsername())
-						.password(info.getPassword())
+						.password(encryptor.decrypt(info.getPassword()))
 						.build();
 				return ds;
 			}
