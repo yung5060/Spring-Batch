@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class SimpleFlowConfig {
+public class FlowStepConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -22,18 +22,21 @@ public class SimpleFlowConfig {
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("batchJob")
-				.start(flow())
-				.next(step3())
-				.end()
+				.start(flowStep())
+				.next(step2())
 				.build();
 	}
 	
-	@Bean
-	public Flow flow() {
+	private Step flowStep() { 
+		return stepBuilderFactory.get("flowStep")
+				.flow(flow())
+				.build();
+	}
+	
+	private Flow flow() {
 		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow");
 		flowBuilder.start(step1())
-				.next(step2())
-				.end();
+					.end();
 		return flowBuilder.build();
 	}
 	
@@ -42,7 +45,8 @@ public class SimpleFlowConfig {
 		return stepBuilderFactory.get("step1")
 				.tasklet((contribution, chunkContext) -> {
 					System.out.println(">> step1 has been executed");
-					return RepeatStatus.FINISHED;
+					throw new RuntimeException("step1 has failed");
+//					return RepeatStatus.FINISHED;
 				})
 				.build();
 	}
