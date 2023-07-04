@@ -1,4 +1,4 @@
-package com.kbank.eai.config;
+package com.kbank.eai.config.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -8,11 +8,10 @@ import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class FlowStepConfig {
 
@@ -45,8 +44,8 @@ public class FlowStepConfig {
 		return stepBuilderFactory.get("step1")
 				.tasklet((contribution, chunkContext) -> {
 					System.out.println(">> step1 has been executed");
-					throw new RuntimeException("step1 has failed");
-//					return RepeatStatus.FINISHED;
+//					throw new RuntimeException("step1 has failed");
+					return RepeatStatus.FINISHED;
 				})
 				.build();
 	}
