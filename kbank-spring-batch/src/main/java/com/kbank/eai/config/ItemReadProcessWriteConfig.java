@@ -1,5 +1,9 @@
 package com.kbank.eai.config;
 
+import com.kbank.eai.entity.Customer;
+import com.kbank.eai.util.CustomItemProcessor;
+import com.kbank.eai.util.CustomItemReader;
+import com.kbank.eai.util.CustomItemWriter;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -10,13 +14,15 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+
 @Configuration
 @RequiredArgsConstructor
 public class ItemReadProcessWriteConfig {
-	
+
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	
+
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("batchJob")
@@ -24,17 +30,17 @@ public class ItemReadProcessWriteConfig {
 				.next(step2())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.tasklet((contribution, chunkContext) -> {
-					System.out.println(">> step1 has been executed");
-					return RepeatStatus.FINISHED;
-				})
+				.<Customer, Customer>chunk(3)
+				.reader(itemReader())
+				.processor(itemProcessor())
+				.writer(itemWriter())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
@@ -44,7 +50,7 @@ public class ItemReadProcessWriteConfig {
 				})
 				.build();
 	}
-	
+
 	@Bean
 	public Step step3() {
 		return stepBuilderFactory.get("step3")
@@ -53,5 +59,27 @@ public class ItemReadProcessWriteConfig {
 					return RepeatStatus.FINISHED;
 				})
 				.build();
+	}
+
+	@Bean
+	public CustomItemReader itemReader() {
+		return new CustomItemReader(Arrays.asList(new Customer("user1")
+				, new Customer("user2")
+				, new Customer("user3")
+				, new Customer("user4")
+				, new Customer("user5")
+				, new Customer("user6")
+				, new Customer("user7")
+		));
+	}
+
+	@Bean
+	public CustomItemProcessor itemProcessor() {
+		return new CustomItemProcessor();
+	}
+
+	@Bean
+	public CustomItemWriter itemWriter() {
+		return new CustomItemWriter();
 	}
 }
