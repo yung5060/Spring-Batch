@@ -1,4 +1,4 @@
-package com.kbank.eai.util;
+package com.kbank.eai.util.writer;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.kbank.eai.util;
+package com.kbank.eai.util.writer;
 
 import com.kbank.eai.entity.Customer;
 import org.springframework.batch.item.ItemWriter;

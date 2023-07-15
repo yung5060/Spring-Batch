@@ -1,4 +1,4 @@
-package com.kbank.eai.config;
+package com.kbank.eai.config.tutorial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 
-import com.kbank.eai.util.CustomItemStreamReader;
-import com.kbank.eai.util.CustomItemStreamWriter;
+import com.kbank.eai.util.reader.CustomItemStreamReader;
+import com.kbank.eai.util.writer.CustomItemStreamWriter;
 
 import lombok.RequiredArgsConstructor;
 

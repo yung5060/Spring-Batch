@@ -1,4 +1,4 @@
-package com.kbank.eai.util;
+package com.kbank.eai.util.reader;
 
 import java.util.ArrayList;
 import java.util.List;

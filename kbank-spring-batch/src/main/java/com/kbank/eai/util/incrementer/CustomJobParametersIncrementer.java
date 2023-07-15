@@ -1,4 +1,4 @@
-package com.kbank.eai.util;
+package com.kbank.eai.util.incrementer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

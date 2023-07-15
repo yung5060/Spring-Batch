@@ -1,4 +1,4 @@
-package com.kbank.eai.util;
+package com.kbank.eai.util.processor;
 
 
 import com.kbank.eai.entity.Customer;

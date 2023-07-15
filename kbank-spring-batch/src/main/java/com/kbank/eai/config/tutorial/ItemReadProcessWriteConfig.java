@@ -10,9 +10,9 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 
 import com.kbank.eai.entity.Customer;
-import com.kbank.eai.util.CustomItemProcessor;
-import com.kbank.eai.util.CustomItemReader;
-import com.kbank.eai.util.CustomItemWriter;
+import com.kbank.eai.util.processor.CustomItemProcessor;
+import com.kbank.eai.util.reader.CustomItemReader;
+import com.kbank.eai.util.writer.CustomItemWriter;
 
 import lombok.RequiredArgsConstructor;
 
