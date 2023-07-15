@@ -9,6 +9,7 @@ spring:
     datasource:
          driver-class-name: org.h2.Driver
          url: jdbc:h2:mem:batchdb
+#         url: jdbc:h2:tcp://localhost/~/Code/Spring-Batch/eaibatchdb
          username: sa
          password:
 #        driver-class-name: com.mysql.cj.jdbc.Driver
@@ -17,6 +18,6 @@ spring:
 #        password: 1234
     batch:
         jdbc:
-            initialize-schema: always
+            initialize-schema: embedded
         job:
             names: ${job.name:None}

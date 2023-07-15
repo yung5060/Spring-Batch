@@ -1,3 +1,6 @@
 *.metadata
 *.vscode
+
+### H2 database ###
 *.mv.db
+*.trace.db

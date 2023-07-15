@@ -1,8 +1,6 @@
 package com.kbank.eai.config.tutorial;
 
-import java.util.Arrays;
-import java.util.List;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -15,7 +13,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.List;
 
 //@Configuration
 @RequiredArgsConstructor
