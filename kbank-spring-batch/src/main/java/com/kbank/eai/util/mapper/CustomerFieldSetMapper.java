@@ -16,9 +16,9 @@ public class CustomerFieldSetMapper implements FieldSetMapper<Customer> {
         }
 
         return Customer.builder()
-                .name(fieldSet.readString(0))
-                .age(fieldSet.readInt(1))
-                .year(fieldSet.readString(2))
+                .name(fieldSet.readString("name"))
+                .age(fieldSet.readInt("age"))
+                .year(fieldSet.readString("year"))
                 .build();
     }
 }

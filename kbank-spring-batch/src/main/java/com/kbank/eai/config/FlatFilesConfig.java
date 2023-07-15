@@ -2,7 +2,6 @@ package com.kbank.eai.config;
 
 import com.kbank.eai.entity.Customer;
 import com.kbank.eai.util.mapper.CustomerFieldSetMapper;
-import com.kbank.eai.util.mapper.DefaultLineMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -10,8 +9,7 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.transform.DelimitedLineTokenizer;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -60,16 +58,25 @@ public class FlatFilesConfig {
 
     @Bean
     public ItemReader itemReader() {
-        FlatFileItemReader<Customer> itemReader = new FlatFileItemReader<>();
-        itemReader.setResource(new ClassPathResource("/flatfiles/customer.csv"));
+//        FlatFileItemReader<Customer> itemReader = new FlatFileItemReader<>();
+//        itemReader.setResource(new ClassPathResource("/flatfiles/customer.csv"));
+//
+//        DefaultLineMapper<Customer> lineMapper = new DefaultLineMapper<>();
+//        lineMapper.setLineTokenizer(new DelimitedLineTokenizer());
+//        lineMapper.setFieldSetMapper(new CustomerFieldSetMapper());
+//
+//        itemReader.setLineMapper(lineMapper);
+//        itemReader.setLinesToSkip(1);
 
-        DefaultLineMapper<Customer> lineMapper = new DefaultLineMapper<>();
-        lineMapper.setLineTokenizer(new DelimitedLineTokenizer());
-        lineMapper.setFieldSetMapper(new CustomerFieldSetMapper());
+//        return itemReader;
 
-        itemReader.setLineMapper(lineMapper);
-        itemReader.setLinesToSkip(1);
-
-        return itemReader;
+        return new FlatFileItemReaderBuilder<Customer>()
+                .name("flatFile")
+                .resource(new ClassPathResource("/flatfiles/customer.csv"))
+                .fieldSetMapper(new CustomerFieldSetMapper())
+                .linesToSkip(1)
+                .delimited().delimiter(",")
+                .names("name", "age", "year")
+                .build();
     }
 }
