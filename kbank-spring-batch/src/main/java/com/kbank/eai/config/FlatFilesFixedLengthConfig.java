@@ -14,6 +14,7 @@ import org.springframework.batch.item.file.transform.Range;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class FlatFilesFixedLengthConfig {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<String, String>chunk(3)
+                .<String, String>chunk(2)
                 .reader(itemReader())
                 .writer(new ItemWriter<String>() {
                     @Override
@@ -60,11 +61,12 @@ public class FlatFilesFixedLengthConfig {
     public FlatFileItemReader itemReader() {
         return new FlatFileItemReaderBuilder<Customer>()
                 .name("flatFile")
-                .resource(new FileSystemResource("C:\\Users\\yung8\\Code\\Spring-Batch\\kbank-spring-batch\\src\\main\\resources\\flatfiles\\customer.txt"))
+                .resource(new ClassPathResource("/flatfiles/customer.txt"))
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<>())
                 .targetType(Customer.class)
                 .linesToSkip(1)
                 .fixedLength()
+                .strict(false)
                 .addColumns(new Range(1, 5))
                 .addColumns(new Range(6, 7))
                 .addColumns(new Range(8, 11))
