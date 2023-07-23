@@ -8,13 +8,8 @@ import lombok.*;
 @Builder
 public class Customer {
 
+    private long id;
     private String name;
-    private String age;
-    private String year;
+    private int age;
 
-    public Customer(String name) {
-        this.name = name;
-        this.age = "20";
-        this.year = "2000";
-    }
 }

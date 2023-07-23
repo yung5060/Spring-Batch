@@ -1,6 +1,7 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
-import java.util.List;
+import com.kbank.eai.entity.Customer;
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -12,14 +13,11 @@ import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.file.transform.Range;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import com.kbank.eai.entity.Customer;
+import java.util.List;
 
-import lombok.RequiredArgsConstructor;
-
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class FlatFilesFixedLengthConfig {
 
@@ -37,7 +35,7 @@ public class FlatFilesFixedLengthConfig {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<String, String>chunk(4)
+                .<String, String>chunk(3)
                 .reader(itemReader())
                 .writer(new ItemWriter<String>() {
                     @Override
