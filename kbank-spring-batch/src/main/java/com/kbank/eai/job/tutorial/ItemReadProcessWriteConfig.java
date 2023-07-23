@@ -1,28 +1,28 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job.tutorial;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Arrays;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 
-import com.kbank.eai.util.reader.CustomItemStreamReader;
-import com.kbank.eai.util.writer.CustomItemStreamWriter;
+import com.kbank.eai.entity.Customer;
+import com.kbank.eai.util.processor.CustomItemProcessor;
+import com.kbank.eai.util.reader.CustomItemReader;
+import com.kbank.eai.util.writer.CustomItemWriter;
 
 import lombok.RequiredArgsConstructor;
 
 //@Configuration
 @RequiredArgsConstructor
-public class ItemStreamConfig {
-	
+public class ItemReadProcessWriteConfig {
+
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	
+
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("batchJob")
@@ -30,16 +30,17 @@ public class ItemStreamConfig {
 				.next(step2())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.<String, String>chunk(2)
+				.<Customer, Customer>chunk(3)
 				.reader(itemReader())
+				.processor(itemProcessor())
 				.writer(itemWriter())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
@@ -49,7 +50,7 @@ public class ItemStreamConfig {
 				})
 				.build();
 	}
-	
+
 	@Bean
 	public Step step3() {
 		return stepBuilderFactory.get("step3")
@@ -59,22 +60,26 @@ public class ItemStreamConfig {
 				})
 				.build();
 	}
-	
-	public CustomItemStreamReader itemReader() {
-		
-		List<String> items = new ArrayList<>(10);
-		
-		for (int i = 1; i <= 10; i++) {
-			items.add(String.valueOf(i));
-		}
-		
-		return new CustomItemStreamReader(items);
-	}
-	
+
 	@Bean
-	public ItemWriter<? super String> itemWriter() {
-		
-		return new CustomItemStreamWriter();
+	public CustomItemReader itemReader() {
+		return new CustomItemReader(Arrays.asList(new Customer("user1")
+				, new Customer("user2")
+				, new Customer("user3")
+				, new Customer("user4")
+				, new Customer("user5")
+				, new Customer("user6")
+				, new Customer("user7")
+		));
 	}
 
+	@Bean
+	public CustomItemProcessor itemProcessor() {
+		return new CustomItemProcessor();
+	}
+
+	@Bean
+	public CustomItemWriter itemWriter() {
+		return new CustomItemWriter();
+	}
 }

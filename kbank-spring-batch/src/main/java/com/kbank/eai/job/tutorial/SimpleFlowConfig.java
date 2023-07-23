@@ -1,4 +1,4 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -13,43 +13,57 @@ import lombok.RequiredArgsConstructor;
 
 //@Configuration
 @RequiredArgsConstructor
-public class StartNextJobConfig {
+public class SimpleFlowConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	
 	@Bean
-	public Job batchJob() {
+	public Job job() {
 		return jobBuilderFactory.get("batchJob")
-				.start(flowA())
-				.next(step3())
-				.next(flowB())
-				.next(step6())
+				.start(flow1())
+					.on("COMPLETED")
+					.to(flow2())
+				.from(flow1())
+					.on("FAILED")
+					.to(flow3())
 				.end()
 				.build();
 	}
 	
 	@Bean
-	public Flow flowA() {
-		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flowA");
-		return flowBuilder.start(step1())
-				.next(step2())
-				.end();
+	public Flow flow1() {
+		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow1");
+		flowBuilder.start(step1())
+					.next(step2())
+					.end();
+		return flowBuilder.build();
 	}
 	
 	@Bean
-	public Flow flowB() {
-		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flowB");
-		return flowBuilder.start(step4())
-				.next(step5())
-				.end();
+	public Flow flow2() {
+		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow2");
+		flowBuilder.start(flow3())
+					.next(step5())
+					.next(step6())
+					.end();
+		return flowBuilder.build();
+	}
+	
+	@Bean
+	public Flow flow3() {
+		FlowBuilder<Flow> flowBuilder = new FlowBuilder<>("flow3");
+		flowBuilder.start(step3())
+					.next(step4())
+					.end();
+		return flowBuilder.build();
 	}
 	
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step1 has executed");
+					System.out.println(">> step1 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -59,8 +73,9 @@ public class StartNextJobConfig {
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step2 has executed");
-					return RepeatStatus.FINISHED;
+					System.out.println(">> step2 has been executed");
+					throw new RuntimeException("step2 has failed");
+//					return RepeatStatus.FINISHED;
 				})
 				.build();
 	}
@@ -69,7 +84,7 @@ public class StartNextJobConfig {
 	public Step step3() {
 		return stepBuilderFactory.get("step3")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step3 has executed");
+					System.out.println(">> step3 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -79,7 +94,7 @@ public class StartNextJobConfig {
 	public Step step4() {
 		return stepBuilderFactory.get("step4")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step4 has executed");
+					System.out.println(">> step4 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -89,7 +104,7 @@ public class StartNextJobConfig {
 	public Step step5() {
 		return stepBuilderFactory.get("step5")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step5 has executed");
+					System.out.println(">> step5 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
@@ -99,10 +114,9 @@ public class StartNextJobConfig {
 	public Step step6() {
 		return stepBuilderFactory.get("step6")
 				.tasklet((contribution, chunkContext) -> {
-					System.out.println("step1 has executed");
+					System.out.println(">> step6 has been executed");
 					return RepeatStatus.FINISHED;
 				})
 				.build();
 	}
-	
 }

@@ -1,28 +1,28 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job.tutorial;
 
-import java.util.Arrays;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
-import com.kbank.eai.entity.Customer;
-import com.kbank.eai.util.processor.CustomItemProcessor;
-import com.kbank.eai.util.reader.CustomItemReader;
-import com.kbank.eai.util.writer.CustomItemWriter;
-
-import lombok.RequiredArgsConstructor;
+import java.util.Arrays;
+import java.util.List;
 
 //@Configuration
 @RequiredArgsConstructor
-public class ItemReadProcessWriteConfig {
+public class ChunkConfig {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-
+	
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("batchJob")
@@ -30,17 +30,30 @@ public class ItemReadProcessWriteConfig {
 				.next(step2())
 				.build();
 	}
-
+	
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.<Customer, Customer>chunk(3)
-				.reader(itemReader())
-				.processor(itemProcessor())
-				.writer(itemWriter())
+				.<String, String>chunk(2)
+				.reader(new ListItemReader<>(Arrays.asList("item1", "item2", "item3", "item4", "item5", "item6", "item7")))
+				.processor(new ItemProcessor<String, String>() {
+					@Override
+					@Nullable
+					public String process(@NonNull String item) throws Exception {
+						System.out.println("item: " + item);
+						return "my_" + item;
+					}
+					
+				})
+				.writer(new ItemWriter<String>() {
+					@Override
+					public void write(List<? extends String> items) throws Exception {
+						items.forEach(item -> System.out.println(item));
+					}
+				})
 				.build();
 	}
-
+	
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
@@ -50,7 +63,7 @@ public class ItemReadProcessWriteConfig {
 				})
 				.build();
 	}
-
+	
 	@Bean
 	public Step step3() {
 		return stepBuilderFactory.get("step3")
@@ -59,27 +72,5 @@ public class ItemReadProcessWriteConfig {
 					return RepeatStatus.FINISHED;
 				})
 				.build();
-	}
-
-	@Bean
-	public CustomItemReader itemReader() {
-		return new CustomItemReader(Arrays.asList(new Customer("user1")
-				, new Customer("user2")
-				, new Customer("user3")
-				, new Customer("user4")
-				, new Customer("user5")
-				, new Customer("user6")
-				, new Customer("user7")
-		));
-	}
-
-	@Bean
-	public CustomItemProcessor itemProcessor() {
-		return new CustomItemProcessor();
-	}
-
-	@Bean
-	public CustomItemWriter itemWriter() {
-		return new CustomItemWriter();
 	}
 }

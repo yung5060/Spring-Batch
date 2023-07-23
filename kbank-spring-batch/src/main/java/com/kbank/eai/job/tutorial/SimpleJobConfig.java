@@ -1,4 +1,4 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

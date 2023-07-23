@@ -1,5 +1,5 @@
 name, age, year
-user1302001a
+user1302001
 user2292002
 user3282003
 user4272004

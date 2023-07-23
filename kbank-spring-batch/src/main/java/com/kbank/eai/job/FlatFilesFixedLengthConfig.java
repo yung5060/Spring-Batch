@@ -1,24 +1,27 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job;
 
-import com.kbank.eai.entity.Customer;
-import com.kbank.eai.util.mapper.CustomerFieldSetMapper;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.transform.Range;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
-import java.util.List;
+import com.kbank.eai.entity.Customer;
 
-//@Configuration
+import lombok.RequiredArgsConstructor;
+
+@Configuration
 @RequiredArgsConstructor
-public class FlatFilesConfig {
+public class FlatFilesFixedLengthConfig {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -34,7 +37,7 @@ public class FlatFilesConfig {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<String, String>chunk(3)
+                .<String, String>chunk(4)
                 .reader(itemReader())
                 .writer(new ItemWriter<String>() {
                     @Override
@@ -55,26 +58,18 @@ public class FlatFilesConfig {
                 .build();
     }
 
-    @Bean
-    public ItemReader itemReader() {
-//        FlatFileItemReader<Customer> itemReader = new FlatFileItemReader<>();
-//        itemReader.setResource(new ClassPathResource("/flatfiles/customer.csv"));
-//
-//        DefaultLineMapper<Customer> lineMapper = new DefaultLineMapper<>();
-//        lineMapper.setLineTokenizer(new DelimitedLineTokenizer());
-//        lineMapper.setFieldSetMapper(new CustomerFieldSetMapper());
-//
-//        itemReader.setLineMapper(lineMapper);
-//        itemReader.setLinesToSkip(1);
-
-//        return itemReader;
-
+    public FlatFileItemReader itemReader() {
         return new FlatFileItemReaderBuilder<Customer>()
                 .name("flatFile")
-                .resource(new ClassPathResource("/flatfiles/customer.csv"))
-                .fieldSetMapper(new CustomerFieldSetMapper())
+                .resource(new ClassPathResource("/flatfiles/customer.txt"))
+                .fieldSetMapper(new BeanWrapperFieldSetMapper<>())
+                .targetType(Customer.class)
                 .linesToSkip(1)
-                .delimited().delimiter(",")
+                .fixedLength()
+//                .strict(false)
+                .addColumns(new Range(1, 5))
+                .addColumns(new Range(6, 7))
+                .addColumns(new Range(8, 11))
                 .names("name", "age", "year")
                 .build();
     }

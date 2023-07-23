@@ -1,10 +1,7 @@
-server:
-    port: 8000
-
 spring:
     h2:
         console:
-            enabled: true
+            enabled: false
             path: /h2-console
     datasource:
          driver-class-name: org.h2.Driver

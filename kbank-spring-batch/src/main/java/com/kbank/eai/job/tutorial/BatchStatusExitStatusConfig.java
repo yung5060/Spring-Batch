@@ -1,4 +1,4 @@
-package com.kbank.eai.config.tutorial;
+package com.kbank.eai.job.tutorial;
 
 import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
