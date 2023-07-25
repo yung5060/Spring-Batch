@@ -9,6 +9,7 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,8 +23,10 @@ public class JdbcCursorJob {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private final DataSource dataSource;
 	private int chunkSize = 10;
+	
+	@Qualifier(value = "srcDataSource")
+	private final DataSource srcDataSource;
 	
 	@Bean
 	public Job batchJob() {
@@ -36,8 +39,8 @@ public class JdbcCursorJob {
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
 				.<Customer, Customer>chunk(chunkSize)
-				.reader(null)
-				.writer(null)
+				.reader(customItemReader())
+				.writer(customItemWriter())
 				.build();
 	}
 	
@@ -49,7 +52,7 @@ public class JdbcCursorJob {
 				.sql("select id, firstName, lastName, birthDate from customer where firstName like ? order by lastName, firstName")
 				.beanRowMapper(Customer.class)
 				.queryArguments("A%")
-				.dataSource(dataSource)
+				.dataSource(srcDataSource)
 				.build();
 	}
 	
