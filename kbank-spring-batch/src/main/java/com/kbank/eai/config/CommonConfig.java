@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.kbank.eai.encryptor.EaiBatchEncryptor;
+import com.kbank.eai.util.encryptor.EaiBatchEncryptor;
 
 
 @Configuration
