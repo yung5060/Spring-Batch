@@ -33,12 +33,14 @@ public class DataSourceConfig {
 //		DataSource ds = null;
 //		return findDs("LOG", ds);
 //	}
+	
 
 	@Bean(name = "srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {
 		DataSource ds = null;
 		return findDs(sBiz, ds);
 	}
+	
 
 	@Bean(name = "dstDataSource")
 	public DataSource dstDataSource(@Value("${dBiz}") String dBiz) throws SQLException {

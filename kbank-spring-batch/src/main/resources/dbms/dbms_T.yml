@@ -4,22 +4,17 @@ jdbc:
       driverClassName: org.h2.Driver
       url: jdbc:h2:mem:localdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
       username: sa
-      password:
-    
-    - system: LOG
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8
-      username: yung
-      password: 1234
-    
-    - system: EAI
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/yungdb?useUnicode=true&characterEncoding=utf8
-      username: yung
-      password: 1234
+      password: 
     
     - system: MCI
       driverClassName: org.h2.Driver
       url: jdbc:h2:mem:mcidb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
       username: sa
-      password:
+      password: 
+      
+    - system: iManager
+      driverClassName: org.apache.derby.jdbc.ClientDriver
+      url: jdbc:derby://localhost:11527/iGate;create=false
+      username: igate
+      password: ENC(PgKZ/q4KwTi0EI7DRdTFiA==)
+      

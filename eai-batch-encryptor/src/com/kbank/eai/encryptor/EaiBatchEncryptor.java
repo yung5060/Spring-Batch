@@ -16,12 +16,12 @@ public class EaiBatchEncryptor implements StringEncryptor {
 	
 	@Override
 	public String decrypt(String encryptedMessage) {
-		if (encryptedMessage.equals("")) {
+		if (encryptedMessage.isEmpty()) {
 			return "";
-		}
-		if (encryptedMessage.startsWith(prefix) && encryptedMessage.endsWith(suffix)) {
+		} else if (encryptedMessage.startsWith(prefix) && encryptedMessage.endsWith(suffix)) {
 			return delegate.decrypt(encryptedMessage.substring(4, encryptedMessage.length() - 1));
 		} else {
+//			return "";
 			throw new IllegalArgumentException("Format not supported.");
 		}
 	}
