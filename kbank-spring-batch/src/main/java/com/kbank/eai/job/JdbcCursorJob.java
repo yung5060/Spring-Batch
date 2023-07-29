@@ -23,7 +23,7 @@ public class JdbcCursorJob {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private int chunkSize = 10;
+	private int chunkSize = 2;
 	
 	@Qualifier(value = "srcDataSource")
 	private final DataSource srcDataSource;
@@ -49,9 +49,9 @@ public class JdbcCursorJob {
 		return new JdbcCursorItemReaderBuilder<Customer>()
 				.name("jdbcCursorItemReader")
 				.fetchSize(chunkSize)
-				.sql("select id, firstName, lastName, birthDate from customer where firstName like ? order by lastName, firstName")
+				.sql("select id, firstname, lastname, birthdate from customer where firstname like ? order by lastname asc, firstname desc")
 				.beanRowMapper(Customer.class)
-				.queryArguments("A%")
+				.queryArguments("%i%")
 				.dataSource(srcDataSource)
 				.build();
 	}
@@ -59,9 +59,7 @@ public class JdbcCursorJob {
 	@Bean
 	public ItemWriter<Customer> customItemWriter() {
 		return items -> {
-			for (Customer item : items) {
-				System.out.println(item.toString());
-			}
+			System.out.println(items.toString());
 		};
 	}
 }

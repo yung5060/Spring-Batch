@@ -8,15 +8,21 @@ jdbc:
     
     - system: LOG
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       username: yung
       password: ENC(rXSKFaqnUInK9Xkgxheflg==)
     
     - system: EAI
       driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/yungdb?useUnicode=true&characterEncoding=utf8
+      url: jdbc:mysql://localhost:3306/yungdb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
       username: yung
       password: ENC(rXSKFaqnUInK9Xkgxheflg==)
+      
+    - system: EXT-MYSQL
+      driverClassName: com.mysql.cj.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/ext?useUnicode=true&characterEncoding=utf8
+      username: root
+      password: ENC(F4n7F+iJnM18wIADYiRsWg==)
     
     - system: MCI
       driverClassName: org.h2.Driver
@@ -25,7 +31,7 @@ jdbc:
       password: 
       
     - system: iManager
-      driverClassName: org.apache.derby.jdbc.ClassDriver
+      driverClassName: org.apache.derby.jdbc.ClientDriver
       url: jdbc:derby://localhost:11527/iGate;create=false
       username: igate
       password: ENC(PgKZ/q4KwTi0EI7DRdTFiA==)
