@@ -1,16 +1,21 @@
 package com.kbank.eai.entity;
 
-import lombok.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+
+import lombok.Data;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Entity
 public class Customer {
 
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private String birthDate;
+	@Id
+	@GeneratedValue
+    private long id;
+    private String firstname;
+    private String lastname;
+    private String birthdate;
 
 }

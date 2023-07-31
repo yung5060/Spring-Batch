@@ -18,4 +18,5 @@ public class CommonConfig {
 	public StringEncryptor encryptorBean() {
 		return new EaiBatchEncryptor(key);
 	}
+	
 }
