@@ -13,6 +13,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +27,8 @@ public class JpaCursorJob {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	
+	@Qualifier(value = "CustomerEntityManagerFactory")
 	private final EntityManagerFactory entityManagerFactory;
 	
 	@Bean
@@ -54,7 +57,7 @@ public class JpaCursorJob {
 		return new JpaCursorItemReaderBuilder<Customer>()
 				.name("jpaCursorItemReader")
 				.entityManagerFactory(entityManagerFactory)
-				.queryString("select c from Customer c where firstname like :firstname")
+				.queryString("select c from customer c where firstname like :firstname")
 				.parameterValues(parameters)
 				.build();
 	}

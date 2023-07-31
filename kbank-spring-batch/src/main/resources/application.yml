@@ -18,3 +18,6 @@ spring:
             initialize-schema: embedded
         job:
             names: ${job.name:None}
+    jpa:
+        hibernate:
+            ddl-auto: update    
