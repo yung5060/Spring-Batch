@@ -21,19 +21,12 @@ public class DataSourceConfig {
 	private final YamlConfig yamlConfig;
 	private final StringEncryptor encryptor;
 	
-//	@Primary
 	@Bean
 	public DataSource dataSource() throws SQLException {
 		DataSource ds = null;
 		return findDs("LOCAL", ds);
 	}
 
-//	@Bean(name = "logDataSource")
-//	public DataSource logDataSource() throws SQLException {
-//		DataSource ds = null;
-//		return findDs("LOG", ds);
-//	}
-	
 
 	@Bean(name = "srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {

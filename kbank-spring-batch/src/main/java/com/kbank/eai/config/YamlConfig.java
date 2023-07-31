@@ -17,6 +17,7 @@ import lombok.Setter;
 @PropertySource(value = "classpath:dbms/dbms_T.yml", factory = YamlPropertySourceFactory.class)
 @ConfigurationProperties(prefix = "jdbc")
 public class YamlConfig {
-
+	
 	private List<DataSourceInfo> list;
+	
 }
