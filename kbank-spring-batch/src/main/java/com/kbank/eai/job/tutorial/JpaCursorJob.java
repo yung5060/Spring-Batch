@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,13 +15,12 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.kbank.eai.entity.Customer;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JpaCursorJob {
 
@@ -42,7 +41,7 @@ public class JpaCursorJob {
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.<Customer, Customer>chunk(3)
+				.<Customer, Customer>chunk(2)
 				.reader(customItemReader())
 				.writer(customItemWriter())
 				.build();
@@ -52,12 +51,12 @@ public class JpaCursorJob {
 	public ItemReader<? extends Customer> customItemReader() {
 		
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("firstname", "%e%");
+		parameters.put("firstname", "%a%");
 		
 		return new JpaCursorItemReaderBuilder<Customer>()
 				.name("jpaCursorItemReader")
 				.entityManagerFactory(entityManagerFactory)
-				.queryString("select c from customer c where firstname like :firstname")
+				.queryString("select c from customer c where firstname like :firstname order by id asc")
 				.parameterValues(parameters)
 				.build();
 	}
