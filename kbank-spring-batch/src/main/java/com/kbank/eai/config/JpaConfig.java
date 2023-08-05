@@ -1,5 +1,7 @@
 package com.kbank.eai.config;
 
+import java.util.Properties;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -25,7 +27,15 @@ public class JpaConfig {
 		emFactory.setPackagesToScan("com.kbank.eai.entity");
 		emFactory.setPersistenceUnitName("customer");
 		emFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		emFactory.setJpaProperties(jpaProperties());
 		return emFactory;
 	}
 	
+	// Define any additional JPA properties if needed
+    private Properties jpaProperties() {
+        Properties properties = new Properties();
+        properties.put("hibernate.hbm2ddl.auto", "update"); // Set the ddl-auto mode here
+        // Add any other required properties
+        return properties;
+    }
 }
