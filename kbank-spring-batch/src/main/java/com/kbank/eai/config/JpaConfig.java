@@ -35,7 +35,7 @@ public class JpaConfig {
     private Properties jpaProperties() {
         Properties properties = new Properties();
         properties.put("hibernate.hbm2ddl.auto", "update"); // Set the ddl-auto mode here
-        properties.put("hibernate.show_sql", "true"); // Enable SQL query output to the console
+//        properties.put("hibernate.show_sql", "true"); // Enable SQL query output to the console
         properties.put("hibernate.format_sql", "true"); // Optional: Format the SQL queries nicely
         // Add any other required properties
         return properties;

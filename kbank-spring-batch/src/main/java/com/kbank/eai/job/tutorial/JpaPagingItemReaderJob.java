@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JpaPagingItemReaderJob {
 	
-	private final int chunkSize = 3;
+	private final int chunkSize = 7;
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
