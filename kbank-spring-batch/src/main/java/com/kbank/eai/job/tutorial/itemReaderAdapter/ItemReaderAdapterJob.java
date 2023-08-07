@@ -1,4 +1,4 @@
-package com.kbank.eai.job.itemReaderAdapter;
+package com.kbank.eai.job.tutorial.itemReaderAdapter;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;

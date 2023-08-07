@@ -1,4 +1,4 @@
-package com.kbank.eai.job.itemReaderAdapter;
+package com.kbank.eai.job.tutorial.itemReaderAdapter;
 
 public class CustomService<T> {
 	
