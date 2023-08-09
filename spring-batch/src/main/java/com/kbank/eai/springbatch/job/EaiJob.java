@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Configuration
 @RequiredArgsConstructor
-public class UserJobConfig {
+public class EaiJob {
 
     private final JobBuilderFactory jobBuilderFactory;
     private final StepBuilderFactory stepBuilderFactory;
@@ -58,7 +58,7 @@ public class UserJobConfig {
 
     @Bean
     public Job userJob() throws Exception {
-        return jobBuilderFactory.get("userJob")
+        return jobBuilderFactory.get("EaiJob")
                 .start(userStep())
                 .build();
     }

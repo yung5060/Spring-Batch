@@ -13,13 +13,12 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import com.kbank.eai.entity.Customer;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JpaPagingItemReaderJob {
 	
@@ -30,8 +29,8 @@ public class JpaPagingItemReaderJob {
 	
 	@Qualifier(value = "srcDataSource")
 	private final DataSource srcDataSource;
-	@Qualifier(value = "CustomerEntityManagerFactory")
-	private final EntityManagerFactory entityManagerFactory;
+	@Qualifier(value = "EntityManagerFactory_SRC")
+	private final EntityManagerFactory entityManagerFactory_SRC;
 	
 	@Bean
 	public Job batchJob() {
@@ -54,7 +53,7 @@ public class JpaPagingItemReaderJob {
 	public ItemReader<Customer> customItemReader() {
 		return new JpaPagingItemReaderBuilder<Customer>()
 				.name("jpaPagingItemReader")
-				.entityManagerFactory(entityManagerFactory)
+				.entityManagerFactory(entityManagerFactory_SRC)
 				.pageSize(chunkSize)
 				.queryString("select c from customer c")
 				.build();

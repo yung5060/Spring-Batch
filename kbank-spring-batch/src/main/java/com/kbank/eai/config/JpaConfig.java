@@ -19,13 +19,29 @@ public class JpaConfig {
 	@Qualifier(value = "srcDataSource")
 	private final DataSource srcDataSource;
 	
+	@Qualifier(value = "dstDataSource")
+	private final DataSource dstDataSource;
 	
-	@Bean(name = "CustomerEntityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+	
+	@Bean
+	@Qualifier("EntityManagerFactory_SRC")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory_SRC() {
 		LocalContainerEntityManagerFactoryBean emFactory = new LocalContainerEntityManagerFactoryBean();
 		emFactory.setDataSource(srcDataSource);
 		emFactory.setPackagesToScan("com.kbank.eai.entity");
-		emFactory.setPersistenceUnitName("customer");
+		emFactory.setPersistenceUnitName("SRC");
+		emFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+		emFactory.setJpaProperties(jpaProperties());
+		return emFactory;
+	}
+	
+	@Bean
+	@Qualifier("EntityManagerFactory_DST")
+	public LocalContainerEntityManagerFactoryBean entityManagerFactory_DST() {
+		LocalContainerEntityManagerFactoryBean emFactory = new LocalContainerEntityManagerFactoryBean();
+		emFactory.setDataSource(dstDataSource);
+		emFactory.setPackagesToScan("com.kbank.eai.entity");
+		emFactory.setPersistenceUnitName("DST");
 		emFactory.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 		emFactory.setJpaProperties(jpaProperties());
 		return emFactory;

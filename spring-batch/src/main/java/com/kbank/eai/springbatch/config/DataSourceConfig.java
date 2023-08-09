@@ -4,7 +4,6 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -19,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 public class DataSourceConfig {
 
 	private final YamlConfig yamlConfig;
-	private final StringEncryptor encryptor;
 	
 	@Bean
 	public DataSource dataSource() throws SQLException {
@@ -52,7 +50,7 @@ public class DataSourceConfig {
 						.driverClassName(info.getDriverClassName())
 						.url(info.getUrl())
 						.username(info.getUsername())
-						.password(encryptor.decrypt(info.getPassword()))
+						.password(info.getPassword())
 						.build();
 				return ds;
 			}

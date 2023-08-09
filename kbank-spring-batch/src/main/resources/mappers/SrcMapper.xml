@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="Source">
+<mapper namespace="User">
 
     <resultMap type="com.kbank.eai.springbatch.model.User" id="user">
         <result property="name" column="name" />
@@ -15,5 +15,20 @@
         FROM USER_TBL
         LIMIT #{_skiprows}, #{_pagesize}
     </select>
+    
+    <insert id="insert" parameterType="com.kbank.eai.springbatch.model.User">
+        INSERT INTO USER_TBL (
+            NAME,
+            EMAIL,
+            ADDRESS,
+            PHONE
+        )
+        VALUES (
+            #{name},
+            #{email},
+            #{address},
+            #{phone}
+        )
+    </insert>
 
 </mapper>

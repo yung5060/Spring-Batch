@@ -27,8 +27,8 @@ public class JpaCursorJob {
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	
-	@Qualifier(value = "CustomerEntityManagerFactory")
-	private final EntityManagerFactory entityManagerFactory;
+	@Qualifier(value = "EntityManagerFactory_SRC")
+	private final EntityManagerFactory entityManagerFactory_SRC;
 	
 	@Bean
 	public Job batchJob() {
@@ -55,7 +55,7 @@ public class JpaCursorJob {
 		
 		return new JpaCursorItemReaderBuilder<Customer>()
 				.name("jpaCursorItemReader")
-				.entityManagerFactory(entityManagerFactory)
+				.entityManagerFactory(entityManagerFactory_SRC)
 				.queryString("select c from customer c where firstname like :firstname order by id asc")
 				.parameterValues(parameters)
 				.build();
