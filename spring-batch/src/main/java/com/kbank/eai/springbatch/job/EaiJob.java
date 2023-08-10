@@ -1,5 +1,7 @@
 package com.kbank.eai.springbatch.job;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -15,10 +17,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.lang.NonNull;
 
 import com.kbank.eai.springbatch.listener.MyBatisChunkListener;
-import com.kbank.eai.springbatch.model.User;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +38,7 @@ public class EaiJob {
     @Qualifier("dstDataSource")
     private final DataSource dstDataSource;
 
-    private final static int chunkSize = 2;
+    private final static int chunkSize = 8;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {
@@ -66,7 +66,7 @@ public class EaiJob {
     @Bean
     public Step userStep() throws Exception {
         return stepBuilderFactory.get("userStep")
-                .<User, User>chunk(chunkSize)
+                .<HashMap, HashMap>chunk(chunkSize)
                 .reader(reader())
                 .processor(processor())
                 .writer(writer())
@@ -75,31 +75,27 @@ public class EaiJob {
     }
 
     @Bean
-    public MyBatisPagingItemReader<User> reader() throws Exception {
-        MyBatisPagingItemReader<User> reader = new MyBatisPagingItemReader<>();
+    public MyBatisPagingItemReader<HashMap> reader() throws Exception {
+        MyBatisPagingItemReader<HashMap> reader = new MyBatisPagingItemReader<>();
         reader.setPageSize(chunkSize);
         reader.setSqlSessionFactory(sqlSessionFactory_SRC());
-        reader.setQueryId("Source.findAll");
+        reader.setQueryId("Mapper.findAll");
         return reader;
     }
 
     @Bean
-    public ItemProcessor<User, User> processor() {
-        return new ItemProcessor<User, User>() {
-            @Override
-            public User process(@NonNull User user) throws Exception {
-                user.setEmail(user.getEmail().replaceFirst("now", "withu"));
-                log.info(user.getName() + " processed!");
-                return user;
-            }
+    public ItemProcessor<HashMap, HashMap> processor() {
+        return map -> {
+        	log.info(map.toString());
+        	return map;
         };
     }
 
     @Bean
-    public MyBatisBatchItemWriter<User> writer() throws Exception {
-        MyBatisBatchItemWriter<User> writer = new MyBatisBatchItemWriter<>();
+    public MyBatisBatchItemWriter<HashMap> writer() throws Exception {
+        MyBatisBatchItemWriter<HashMap> writer = new MyBatisBatchItemWriter<>();
         writer.setSqlSessionFactory(sqlSessionFactory_DST());
-        writer.setStatementId("Destination.insert");
+        writer.setStatementId("Mapper.insert");
         // log.info();
         return writer;
     }

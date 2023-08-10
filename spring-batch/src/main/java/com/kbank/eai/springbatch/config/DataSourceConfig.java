@@ -4,6 +4,7 @@ import java.sql.SQLException;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -20,24 +21,28 @@ public class DataSourceConfig {
 	private final YamlConfig yamlConfig;
 	
 	@Bean
+//	@Primary
 	public DataSource dataSource() throws SQLException {
 		DataSource ds = null;
 		return findDs("LOCAL", ds);
 	}
 
-	@Bean(name = "logDataSource")
+	@Bean
+	@Qualifier("logDataSource")
 	public DataSource logDataSource() throws SQLException {
 		DataSource ds = null;
 		return findDs("LOG", ds);
 	}
 
-	@Bean(name = "srcDataSource")
+	@Bean
+	@Qualifier("srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {
 		DataSource ds = null;
 		return findDs(sBiz, ds);
 	}
 
-	@Bean(name = "dstDataSource")
+	@Bean
+	@Qualifier("dstDataSource")
 	public DataSource dstDataSource(@Value("${dBiz}") String dBiz) throws SQLException {
 		DataSource ds = null;
 		return findDs(dBiz, ds);
