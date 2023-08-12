@@ -1,6 +1,6 @@
 package com.kbank.eai.job;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -15,7 +15,6 @@ import org.springframework.batch.item.database.JdbcPagingItemReader;
 import org.springframework.batch.item.database.Order;
 import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilder;
-import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -50,7 +49,7 @@ public class JdbcItemWriterJob {
 	@Bean
 	public Step step1() throws Exception {
 		return stepBuilderFactory.get("step1")
-				.<Map, HashMap>chunk(chunkSize)
+				.<Map<String, Object>, Map<String, Object>>chunk(chunkSize)
 				.reader(customItemReader())
 //				.processor(null)
 				.writer(jdbcBatchItemWriter())
@@ -60,17 +59,12 @@ public class JdbcItemWriterJob {
 	@Bean
 	public JdbcPagingItemReader<Map<String, Object>> customItemReader() throws Exception {
 		
-		Map<String, Order> sortKeys = new HashMap<>();
-		sortKeys.put("NAME", Order.ASCENDING);
-		
-		return new JdbcPagingItemReaderBuilder<Map<String, Object>>()
-				.name("jdbcPagingItemReader")
-				.dataSource(srcDataSource)
-				.rowMapper(new ColumnMapRowMapper())
-				.pageSize(chunkSize)
-				.queryProvider(createQueryProvider())
-				.sortKeys(sortKeys)
-				.build();
+		JdbcPagingItemReader<Map<String, Object>> reader = new JdbcPagingItemReader<>();
+		reader.setDataSource(srcDataSource);
+		reader.setPageSize(chunkSize);
+		reader.setQueryProvider(createQueryProvider());
+		reader.setRowMapper(new ColumnMapRowMapper());
+		return reader;
 	}
 	
 	private PagingQueryProvider createQueryProvider() throws Exception {
@@ -78,7 +72,7 @@ public class JdbcItemWriterJob {
 		queryProvider.setDataSource(srcDataSource);
 		queryProvider.setSelectClause("SELECT *");
 		queryProvider.setFromClause("FROM USR_TBL");
-		queryProvider.setSortKey("NAME");
+		queryProvider.setSortKeys(Collections.singletonMap("NAME", Order.ASCENDING));
 		return queryProvider.getObject();
 	}
 	
@@ -92,11 +86,12 @@ public class JdbcItemWriterJob {
 //	}
 	
 	@Bean
-	public JdbcBatchItemWriter<HashMap> jdbcBatchItemWriter() {
-		return new JdbcBatchItemWriterBuilder<HashMap>()
+	public JdbcBatchItemWriter<Map<String, Object>> jdbcBatchItemWriter() {
+	return new JdbcBatchItemWriterBuilder<Map<String, Object>>()
 				.dataSource(dstDataSource)
-				.sql("INSERT INTO USER_TBL (NAME, EMAIL, ADDRESS, PHONE) VALUES (:NAME, :EMAIL, :ADRESS, :PHONE)")
+				.sql("INSERT INTO USR_TBL (NAME, EMAIL, ADDRESS, PHONE) VALUES (:NAME, :EMAIL, :ADRESS, :PHONE)")
 				.beanMapped()
 				.build();
 	}
+	
 }
