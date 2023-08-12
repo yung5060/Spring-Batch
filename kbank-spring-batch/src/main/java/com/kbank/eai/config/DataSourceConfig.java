@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.jasypt.encryption.StringEncryptor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -28,14 +29,16 @@ public class DataSourceConfig {
 	}
 
 
-	@Bean(name = "srcDataSource")
+	@Bean
+	@Qualifier(value = "srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {
 		DataSource ds = null;
 		return findDs(sBiz, ds);
 	}
 	
 
-	@Bean(name = "dstDataSource")
+	@Bean
+	@Qualifier(value = "dstDataSource")
 	public DataSource dstDataSource(@Value("${dBiz}") String dBiz) throws SQLException {
 		DataSource ds = null;
 		return findDs(dBiz, ds);

@@ -20,8 +20,8 @@
 
     <select id="findAll" resultType="java.util.HashMap">
         SELECT *
-        FROM USER_TBL
-        LIMIT #{_skiprows}, #{_pagesize}
+        FROM USR_TBL
+        OFFSET #{_skiprows} ROWS FETCH FIRST #{_pagesize} ROWS ONLY
     </select>
 
 </mapper>

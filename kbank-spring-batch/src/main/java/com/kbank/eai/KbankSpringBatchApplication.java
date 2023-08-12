@@ -35,10 +35,10 @@ public class KbankSpringBatchApplication {
 				if(jar.toString().toLowerCase().contains(".jar")) {
 					try {
 						method.invoke(loader, new Object[] {jar.toURI().toURL()});
-						log.info(jar.getName() + "is loaded");
+						log.info(jar.getName() + " has been loaded");
 					} catch(Exception e) {
 						e.printStackTrace();
-						log.error(jar.getName() + " can't load.");
+						log.error(jar.getName() + " failed at load.");
 					}
 				}
 				return false;
