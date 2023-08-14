@@ -38,7 +38,7 @@ public class EaiJob {
     @Qualifier("dstDataSource")
     private final DataSource dstDataSource;
 
-    private final static int chunkSize = 15;
+    private final static int chunkSize = 16;
 
     @Bean
     public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {

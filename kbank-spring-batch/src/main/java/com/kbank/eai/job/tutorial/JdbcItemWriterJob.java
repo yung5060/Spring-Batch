@@ -1,6 +1,7 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -18,12 +19,10 @@ import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilde
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.jdbc.core.ColumnMapRowMapper;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JdbcItemWriterJob {
 
@@ -62,17 +61,24 @@ public class JdbcItemWriterJob {
 		JdbcPagingItemReader<Map<String, Object>> reader = new JdbcPagingItemReader<>();
 		reader.setDataSource(srcDataSource);
 		reader.setPageSize(chunkSize);
+		reader.setRowMapper((resultSet, rowNum) -> {
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("NAME", resultSet.getString("NAME"));
+			resultMap.put("EMAIL", resultSet.getString("EMAIL"));
+			resultMap.put("ADDRESS", resultSet.getString("ADDRESS"));
+			resultMap.put("PHONE", resultSet.getString("PHONE"));
+			return resultMap;
+		});
 		reader.setQueryProvider(createQueryProvider());
-		reader.setRowMapper(new ColumnMapRowMapper());
 		return reader;
 	}
 	
 	private PagingQueryProvider createQueryProvider() throws Exception {
 		SqlPagingQueryProviderFactoryBean queryProvider = new SqlPagingQueryProviderFactoryBean();
 		queryProvider.setDataSource(srcDataSource);
-		queryProvider.setSelectClause("SELECT *");
+		queryProvider.setSelectClause("SELECT NAME, EMAIL, ADDRESS, PHONE");
 		queryProvider.setFromClause("FROM USR_TBL");
-		queryProvider.setSortKeys(Collections.singletonMap("NAME", Order.ASCENDING));
+		queryProvider.setSortKeys(Collections.singletonMap("NAME", Order.DESCENDING));
 		return queryProvider.getObject();
 	}
 	
