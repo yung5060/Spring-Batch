@@ -10,7 +10,7 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>kbank-spring-batch</artifactId>
+	<artifactId>inflearn-batch</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>kbank-spring-batch</name>
 	<description>Demo project for Spring Boot</description>

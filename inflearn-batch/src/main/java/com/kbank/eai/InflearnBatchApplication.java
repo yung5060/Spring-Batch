@@ -14,13 +14,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @SpringBootApplication
 @EnableBatchProcessing
-public class KbankSpringBatchApplication {
+public class InflearnBatchApplication {
 
 	public static void main(String[] args) throws Exception {
 		
 		loadJar(args[0]);
 		
-		SpringApplication.run(KbankSpringBatchApplication.class, args);
+		SpringApplication.run(InflearnBatchApplication.class, args);
 	}
 
 	private static void loadJar(String dir) throws Exception {
