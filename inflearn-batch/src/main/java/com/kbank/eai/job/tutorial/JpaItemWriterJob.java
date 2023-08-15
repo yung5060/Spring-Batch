@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class JpaItemWriterJob {
 	
-	private final int chunkSize = 7;
+	private final int chunkSize = 8;
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -76,7 +76,7 @@ public class JpaItemWriterJob {
 			public Customer2 process(@NonNull Customer2 item) throws Exception {
 				Customer2 customer = new Customer2();
 				customer.setName(item.getName());
-				customer.setEmail(item.getEmail().replaceFirst("mci", "eai"));
+				customer.setEmail(item.getEmail().replaceFirst("mci", "fep"));
 				customer.setAddress(item.getAddress());
 				customer.setPhone(item.getPhone());
 				log.info(customer.toString());

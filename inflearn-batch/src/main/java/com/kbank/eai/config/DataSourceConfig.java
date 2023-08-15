@@ -14,7 +14,9 @@ import org.springframework.context.annotation.Configuration;
 import com.kbank.eai.dto.DataSourceInfo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class DataSourceConfig {
@@ -32,6 +34,7 @@ public class DataSourceConfig {
 	@Bean
 	@Qualifier(value = "srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {
+		log.info("SRC: " + sBiz);
 		DataSource ds = null;
 		return findDs(sBiz, ds);
 	}
@@ -40,6 +43,7 @@ public class DataSourceConfig {
 	@Bean
 	@Qualifier(value = "dstDataSource")
 	public DataSource dstDataSource(@Value("${dBiz}") String dBiz) throws SQLException {
+		log.info("DST: " + dBiz);
 		DataSource ds = null;
 		return findDs(dBiz, ds);
 	}

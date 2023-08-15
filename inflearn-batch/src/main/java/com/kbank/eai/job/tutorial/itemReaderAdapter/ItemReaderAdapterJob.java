@@ -48,7 +48,7 @@ public class ItemReaderAdapterJob {
 	
 	@Bean
 	public Object customService() {
-		return new CustomService();
+		return new CustomService<String>();
 	}
 
 	@Bean
