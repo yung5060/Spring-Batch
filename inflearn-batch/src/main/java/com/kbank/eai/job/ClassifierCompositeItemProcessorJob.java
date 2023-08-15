@@ -6,12 +6,13 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
-public class CompositeItemProcessorJob {
+public class ClassifierCompositeItemProcessorJob {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -27,7 +28,7 @@ public class CompositeItemProcessorJob {
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.<String, String>chunk(10)
+				.<String, String>chunk(5)
 				.reader(null)
 				.writer(null)
 				.build();
