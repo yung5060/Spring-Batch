@@ -53,6 +53,7 @@ public class JpaConfig {
         properties.put("hibernate.hbm2ddl.auto", "update"); // Set the ddl-auto mode here
 //        properties.put("hibernate.show_sql", "true"); // Enable SQL query output to the console
         properties.put("hibernate.format_sql", "true"); // Optional: Format the SQL queries nicely
+        properties.put("hibernate.allow_update_outside_transaction", true);
         // Add any other required properties
         return properties;
     }

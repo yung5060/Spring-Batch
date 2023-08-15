@@ -1,37 +1,37 @@
 package com.kbank.eai.job;
 
 import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import com.kbank.eai.entity.Customer2;
 
 import lombok.RequiredArgsConstructor;
 
+
 @Configuration
 @RequiredArgsConstructor
 public class JpaItemWriterJob {
 	
-	private final int chunkSize = 5;
+	private final int chunkSize = 7;
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	
-	@Qualifier(value = "srcDataSource")
-	private final DataSource srcDataSource;
-	@Qualifier(value = "dstDataSource")
-	private final DataSource dstDataSource;
 	@Qualifier(value = "EntityManagerFactory_SRC")
 	private final EntityManagerFactory entityManagerFactory_SRC;
 	@Qualifier(value = "EntityManagerFactory_DST")
@@ -50,7 +50,8 @@ public class JpaItemWriterJob {
 		return stepBuilderFactory.get("step1")
 				.<Customer2, Customer2>chunk(chunkSize)
 				.reader(customItemReader())
-				.writer(writer())
+				.processor(customItemProcessor())
+				.writer(customItemWriter())
 				.build();
 	}
 	
@@ -64,12 +65,28 @@ public class JpaItemWriterJob {
 				.build();
 	}
 	
-	private ItemWriter<Customer2> writer() {
-		return customers -> {
-			System.out.println("\n==========================chunk done================================\n");
-			for (Customer2 customer : customers) {
+	@Bean
+	public ItemProcessor<? super Customer2, ? extends Customer2> customItemProcessor() {
+		return new ItemProcessor<Customer2, Customer2>() {
+			@Override
+			@Nullable
+			public Customer2 process(@NonNull Customer2 item) throws Exception {
+				Customer2 customer = new Customer2();
+				customer.setName(item.getName());
+				customer.setEmail(item.getEmail().replaceFirst("example", "kbanknow"));
+				customer.setAddress(item.getAddress());
+				customer.setPhone(item.getPhone());
 				System.out.println(customer.toString());
+				return customer;
 			}
+			
 		};
+	}
+	
+	@Bean
+	public ItemWriter<? super Customer2> customItemWriter() {
+		return new JpaItemWriterBuilder<Customer2>()
+				.entityManagerFactory(entityManagerFactory_DST)
+				.build();
 	}
 }
