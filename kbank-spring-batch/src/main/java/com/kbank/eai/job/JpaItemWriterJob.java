@@ -2,6 +2,7 @@ package com.kbank.eai.job;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -21,8 +22,9 @@ import org.springframework.lang.Nullable;
 import com.kbank.eai.entity.Customer2;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
 @Configuration
 @RequiredArgsConstructor
 public class JpaItemWriterJob {
@@ -31,6 +33,7 @@ public class JpaItemWriterJob {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final ChunkListener customChunkListener;
 	
 	@Qualifier(value = "EntityManagerFactory_SRC")
 	private final EntityManagerFactory entityManagerFactory_SRC;
@@ -52,6 +55,7 @@ public class JpaItemWriterJob {
 				.reader(customItemReader())
 				.processor(customItemProcessor())
 				.writer(customItemWriter())
+				.listener(customChunkListener)
 				.build();
 	}
 	
@@ -76,7 +80,7 @@ public class JpaItemWriterJob {
 				customer.setEmail(item.getEmail().replaceFirst("example", "kbanknow"));
 				customer.setAddress(item.getAddress());
 				customer.setPhone(item.getPhone());
-				System.out.println(customer.toString());
+				log.info(customer.toString());
 				return customer;
 			}
 			

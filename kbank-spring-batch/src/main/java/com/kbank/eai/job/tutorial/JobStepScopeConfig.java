@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 
 import com.kbank.eai.listener.CustomStepListener;
-import com.kbank.eai.listener.JobListener;
+import com.kbank.eai.listener.CustomChunkListener;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,7 +28,7 @@ public class JobStepScopeConfig {
 		return jobBuilderFactory.get("batchJob")
 				.start(step1(null))
 				.next(step3())
-				.listener(new JobListener())
+				.listener(new CustomChunkListener())
 				.build();
 	}
 	
