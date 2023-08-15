@@ -23,3 +23,11 @@ jdbc:
       url: jdbc:derby://localhost:11527/iGate;create=false
       username: igate
       password: ENC(PgKZ/q4KwTi0EI7DRdTFiA==)
+      
+    - system: FEP
+      driverClassName: org.postgresql.Driver
+      url: jdbc:postgresql://localhost:1645/yungdb
+      username: postgres
+      password: ENC(SrUhkauGZVWuMSGxToRPVI8qRKcXQzgc)
+      
+      
