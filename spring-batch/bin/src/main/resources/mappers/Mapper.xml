@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Mapper">
+
+     <insert id="insert" parameterType="java.util.HashMap">
+        INSERT INTO USR_TBL (
+            NAME,
+            EMAIL,
+            ADDRESS,
+            PHONE
+        )
+        VALUES (
+            #{NAME},
+            #{EMAIL},
+            #{ADDRESS},
+            #{PHONE}
+        )
+    </insert>
+
+    <select id="findAll" resultType="java.util.HashMap">
+        SELECT *
+        FROM USR_TBL
+        OFFSET #{_skiprows} ROWS FETCH FIRST #{_pagesize} ROWS ONLY
+    </select>
+
+</mapper>

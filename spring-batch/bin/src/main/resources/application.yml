@@ -1,0 +1,18 @@
+spring:
+#  h2:
+#    console:
+#      enabled: true
+#      path: /h2-console
+  batch:
+    jdbc:
+      initialize-schema: embedded
+    job:
+      names: ${job.name:None}
+
+jasypt:
+  encryptor:
+    bean: encryptorBean
+    prefix: ENC(
+    suffix: )
+
+      
