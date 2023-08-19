@@ -14,7 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Configuration
-@PropertySource(value = "classpath:dbms/dbms_T.yml", factory = YamlPropertySourceFactory.class)
+@PropertySource(value = "classpath:dbms/dbms_${spring.profiles.active}.yml", factory = YamlPropertySourceFactory.class)
 @ConfigurationProperties(prefix = "jdbc")
 public class YamlConfig {
 	

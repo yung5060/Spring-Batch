@@ -1,18 +1,15 @@
 package com.kbank.eai.config;
 
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
-import lombok.RequiredArgsConstructor;
+import javax.sql.DataSource;
+import java.util.Properties;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JpaConfig {
 	

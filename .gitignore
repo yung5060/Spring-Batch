@@ -1,6 +1,8 @@
 *.metadata
 *.vscode
 *.jar
+*.iml
+*.idea
 
 ### H2 database ###
 *.mv.db
