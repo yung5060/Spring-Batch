@@ -12,9 +12,13 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.batch.repeat.CompletionPolicy;
 import org.springframework.batch.repeat.RepeatCallback;
 import org.springframework.batch.repeat.RepeatContext;
 import org.springframework.batch.repeat.RepeatStatus;
+import org.springframework.batch.repeat.exception.ExceptionHandler;
+import org.springframework.batch.repeat.exception.SimpleLimitExceptionHandler;
+import org.springframework.batch.repeat.policy.CompositeCompletionPolicy;
 import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
 import org.springframework.batch.repeat.policy.TimeoutTerminationPolicy;
 import org.springframework.batch.repeat.support.RepeatTemplate;
@@ -41,7 +45,7 @@ public class RepeatJob {
 	@Bean
 	public Step step() throws Exception {
 		return stepBuilderFactory.get("step")
-				.<String, String>chunk(5)
+				.<String, String>chunk(3)
 				.reader(new ItemReader<String>() {
 					int i = 0;
 					@Override
@@ -57,15 +61,26 @@ public class RepeatJob {
 					@Override
 					public String process(String item) throws Exception {
 						
-						repeatTemplate.setCompletionPolicy(new SimpleCompletionPolicy(3));
+//						repeatTemplate.setCompletionPolicy(new SimpleCompletionPolicy(3));
 //						repeatTemplate.setCompletionPolicy(new TimeoutTerminationPolicy(1000));
+						
+//						CompositeCompletionPolicy completionPolicy = new CompositeCompletionPolicy();
+//						CompletionPolicy[] completionPolicies = new CompletionPolicy[] {
+//																	new SimpleCompletionPolicy(3),
+//																	new TimeoutTerminationPolicy(3000)
+//																};
+//						completionPolicy.setPolicies(completionPolicies);
+//						repeatTemplate.setCompletionPolicy(completionPolicy);
+						
+						repeatTemplate.setExceptionHandler(simpleExceptionHandler());
 						
 						repeatTemplate.iterate(new RepeatCallback() {
 							@Override
 							public RepeatStatus doInIteration(RepeatContext context) throws Exception {
 								
 								System.out.println("repeatTemplate is being tested");
-								return RepeatStatus.CONTINUABLE;
+								throw new RuntimeException("Exception has occured");
+//								return RepeatStatus.CONTINUABLE;
 							}
 						});
 						
@@ -75,5 +90,10 @@ public class RepeatJob {
 				})
 				.writer(items -> System.out.println(items))
 				.build();
+	}
+	
+	@Bean
+	public ExceptionHandler simpleExceptionHandler() {
+		return new SimpleLimitExceptionHandler(3);
 	}
 }
