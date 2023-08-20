@@ -3,6 +3,7 @@
 *.jar
 *.iml
 *.idea
+*.DS_Store
 
 ### H2 database ###
 *.mv.db

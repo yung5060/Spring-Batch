@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -25,7 +25,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class JpaItemWriterJob {
 	
@@ -77,7 +77,7 @@ public class JpaItemWriterJob {
 			public Customer2 process(@NonNull Customer2 item) throws Exception {
 				Customer2 customer = new Customer2();
 				customer.setName(item.getName());
-				customer.setEmail(item.getEmail().replaceFirst("eai", "fep"));
+				customer.setEmail(item.getEmail().replaceFirst("fep", "eai"));
 				customer.setAddress(item.getAddress());
 				customer.setPhone(item.getPhone());
 				log.info(customer.toString());
