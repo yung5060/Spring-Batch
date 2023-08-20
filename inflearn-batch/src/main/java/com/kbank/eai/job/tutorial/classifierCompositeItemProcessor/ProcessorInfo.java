@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial.classifierCompositeItemProcessor;
 
 import lombok.Builder;
 import lombok.Data;

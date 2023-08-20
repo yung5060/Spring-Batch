@@ -1,4 +1,4 @@
-package com.kbank.eai.job.tutorial;
+package com.kbank.eai.job;
 
 import javax.persistence.EntityManagerFactory;
 
@@ -15,6 +15,7 @@ import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
 import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -24,11 +25,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class JpaItemWriterJob {
 	
-	private final int chunkSize = 8;
+	private final int chunkSize = 15;
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -76,7 +77,7 @@ public class JpaItemWriterJob {
 			public Customer2 process(@NonNull Customer2 item) throws Exception {
 				Customer2 customer = new Customer2();
 				customer.setName(item.getName());
-				customer.setEmail(item.getEmail().replaceFirst("mci", "fep"));
+				customer.setEmail(item.getEmail().replaceFirst("eai", "fep"));
 				customer.setAddress(item.getAddress());
 				customer.setPhone(item.getPhone());
 				log.info(customer.toString());

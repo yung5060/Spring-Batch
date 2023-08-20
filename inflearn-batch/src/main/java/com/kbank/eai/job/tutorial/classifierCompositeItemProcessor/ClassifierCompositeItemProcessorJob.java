@@ -1,22 +1,27 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial.classifierCompositeItemProcessor;
 
-import com.kbank.eai.listener.CustomChunkListener;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.*;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.NonTransientResourceException;
+import org.springframework.batch.item.ParseException;
+import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.batch.item.support.ClassifierCompositeItemProcessor;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.kbank.eai.listener.CustomChunkListener;
 
-@Configuration
+import lombok.RequiredArgsConstructor;
+
+//@Configuration
 @RequiredArgsConstructor
 public class ClassifierCompositeItemProcessorJob {
 

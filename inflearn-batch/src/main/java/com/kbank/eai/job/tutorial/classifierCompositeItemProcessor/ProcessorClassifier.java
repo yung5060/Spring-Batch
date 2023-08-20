@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial.classifierCompositeItemProcessor;
 
 import java.util.HashMap;
 import java.util.Map;
