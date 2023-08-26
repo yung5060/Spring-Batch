@@ -46,7 +46,7 @@ public class SkipConfigJob {
 				.writer(itemWriter())
 				.faultTolerant()
 				.skip(SkippableException.class)
-				.skipLimit(2)
+				.skipLimit(3)
 				.build();
 	}
 
