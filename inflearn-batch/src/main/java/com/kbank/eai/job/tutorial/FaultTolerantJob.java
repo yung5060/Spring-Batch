@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class FaultTolerantJob {
 
