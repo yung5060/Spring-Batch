@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial.skipConfigJob;
 
 
 import org.springframework.batch.item.ItemWriter;

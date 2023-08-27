@@ -1,14 +1,20 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial.skipConfigJob;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.step.skip.LimitCheckingItemSkipPolicy;
+import org.springframework.batch.core.step.skip.SkipPolicy;
 import org.springframework.batch.item.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 @RequiredArgsConstructor
@@ -45,9 +51,19 @@ public class SkipConfigJob {
 				.processor(itemProcessor())
 				.writer(itemWriter())
 				.faultTolerant()
-				.skip(SkippableException.class)
-				.skipLimit(3)
+				.skipPolicy(limitCheckingSkipPolicy())
 				.build();
+	}
+
+	@Bean
+	public SkipPolicy limitCheckingSkipPolicy() {
+
+		Map<Class<? extends Throwable>, Boolean> exceptionClass = new HashMap<>();
+		exceptionClass.put(SkippableException.class, true);
+
+		LimitCheckingItemSkipPolicy policy = new LimitCheckingItemSkipPolicy(4, exceptionClass);
+
+		return policy;
 	}
 
 	@Bean
