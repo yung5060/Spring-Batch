@@ -37,6 +37,8 @@ public class RetryConfigJob {
                 .processor(processor())
                 .writer(items -> items.forEach(System.out::println))
                 .faultTolerant()
+                .skip(RetryableException.class)
+                .skipLimit(2)
                 .retry(RetryableException.class)
                 .retryLimit(2)
                 .build();
