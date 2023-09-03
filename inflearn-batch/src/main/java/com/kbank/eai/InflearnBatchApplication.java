@@ -19,8 +19,8 @@ public class InflearnBatchApplication {
 
 	public static void main(String[] args) throws Exception {
 		
-//		loadJar(args[0]); 	//Windows
-		loadJar(args[1]);	//Mac
+		loadJar(args[0]); 	//Windows
+//		loadJar(args[1]);	//Mac
 		
 		SpringApplication.run(InflearnBatchApplication.class, args);
 	}
