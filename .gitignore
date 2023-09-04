@@ -4,6 +4,7 @@
 *.iml
 *.idea
 *.DS_Store
+
 *.classpath
 
 ### H2 database ###
