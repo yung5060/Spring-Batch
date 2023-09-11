@@ -1,6 +1,5 @@
 package com.kbank.eai.job.template;
 
-import com.kbank.eai.job.RetryableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -38,7 +37,7 @@ public class RetryConfigJob {
     @Bean
     public Step step1() {
         return stepBuilderFactory.get("step1")
-                .<String, Customer>chunk(4)
+                .<String, Customer>chunk(3)
                 .reader(reader())
                 .processor(processor())
                 .writer(items -> items.forEach(System.out::println))

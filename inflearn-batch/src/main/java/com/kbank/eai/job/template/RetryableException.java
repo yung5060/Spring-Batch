@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.template;
 
 public class RetryableException extends RuntimeException {
 

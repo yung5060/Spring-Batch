@@ -1,6 +1,5 @@
 package com.kbank.eai.job.template;
 
-import com.kbank.eai.job.RetryableException;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.retry.RecoveryCallback;

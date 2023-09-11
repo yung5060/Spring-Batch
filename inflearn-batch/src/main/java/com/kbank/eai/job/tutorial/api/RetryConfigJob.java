@@ -1,6 +1,5 @@
 package com.kbank.eai.job.tutorial.api;
 
-import com.kbank.eai.job.RetryableException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -12,6 +11,8 @@ import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
+
+import com.kbank.eai.job.template.RetryableException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
