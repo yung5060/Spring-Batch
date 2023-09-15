@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="Mapper">
+
+    <select id="select" resultType="java.util.HashMap">
+        SELECT address
+            , email
+            , name
+            , phone
+        FROM
+            customer2
+        LIMIT #{_pagesize} OFFSET #{_skiprows}
+    </select>
+
+    <insert id="insert" parameterType="java.util.HashMap">
+        INSERT INTO customer2 (
+            address
+            , email
+            , name
+            , phone
+        )
+        VALUES (
+        #{address},
+        #{email},
+        #{name},
+        #{phone}
+        )
+    </insert>
+
+</mapper>
