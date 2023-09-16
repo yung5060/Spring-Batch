@@ -115,8 +115,10 @@ public class AsyncConfigJob {
 				item.forEach((key, value) -> {
 					if("email".equals((String) key)) {
 						result.put("email", item.get("email").toString().replaceFirst("eai", "fep"));
+					} else if ("phone".equals((String) key)){
+						result.put("phone", "+82" + " " + value.toString());
 					} else {
-						result.put((String) key, value.toString());
+						result.put((String) key, (String) value);
 					}
 				});
 				System.out.println(result.toString());
