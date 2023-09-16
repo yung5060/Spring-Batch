@@ -92,6 +92,7 @@ public class AsyncConfigJob {
 				.reader(pagingItemReader())
 				.processor(asyncItemProcessor())
 				.writer(asyncItemWriter())
+				.listener(new CustomChunkListener())
 				.build();
 	}
 
