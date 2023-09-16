@@ -5,6 +5,8 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import com.kbank.eai.listener.CustomChunkListener;
+import com.kbank.eai.listener.StopWatchJobListener;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
@@ -15,6 +17,8 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.integration.async.AsyncItemProcessor;
+import org.springframework.batch.integration.async.AsyncItemWriter;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -24,6 +28,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -63,7 +68,9 @@ public class AsyncConfigJob {
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
 				.incrementer(new RunIdIncrementer())
-				.start(step1())
+//				.start(step1())
+				.start(asyncStep1())
+				.listener(new StopWatchJobListener())
 				.build();
 	}
 
@@ -74,14 +81,17 @@ public class AsyncConfigJob {
 				.reader(pagingItemReader())
 				.processor(customItemProcessor())
 				.writer(customItemWriter())
+				.listener(new CustomChunkListener())
 				.build();
 	}
 
 	@Bean
 	public Step asyncStep1() throws Exception {
 		return stepBuilderFactory.get("asyncStep1")
-				.chunk(chunkSize)
+				.<HashMap, HashMap>chunk(chunkSize)
 				.reader(pagingItemReader())
+				.processor(asyncItemProcessor())
+				.writer(asyncItemWriter())
 				.build();
 	}
 
@@ -95,7 +105,27 @@ public class AsyncConfigJob {
 	}
 
 	@Bean
-	public ItemWriter<? super HashMap> customItemWriter() throws Exception {
+	public ItemProcessor<HashMap, HashMap> customItemProcessor() throws InterruptedException {
+		return new ItemProcessor<HashMap, HashMap>() {
+			@Override
+			public HashMap process(HashMap item) throws Exception {
+				Thread.sleep(100);
+				Map<String, String> result = new HashMap<>();
+				item.forEach((key, value) -> {
+					if("email".equals((String) key)) {
+						result.put("email", item.get("email").toString().replaceFirst("eai", "fep"));
+					} else {
+						result.put((String) key, value.toString());
+					}
+				});
+				System.out.println(result.toString());
+				return (HashMap) result;
+			}
+		};
+	}
+
+	@Bean
+	public ItemWriter<HashMap> customItemWriter() throws Exception {
 		return new MyBatisBatchItemWriterBuilder<HashMap>()
 				.sqlSessionFactory(sqlSessionFactory_DST())
 				.statementId(mapperName + ".insert")
@@ -103,20 +133,18 @@ public class AsyncConfigJob {
 	}
 
 	@Bean
-	public ItemProcessor<? super HashMap, ? extends HashMap> customItemProcessor() {
-		return new ItemProcessor<HashMap, HashMap>() {
-			@Override
-			public HashMap process(HashMap item) throws Exception {
-				Map<String, String> result = new HashMap<>();
-				item.forEach((key, value) -> {
-					if("email".equals((String) key)) {
-						result.put("email", item.get("email").toString().replaceFirst("eai", "fep"));
-					}
-					result.put((String) key, value + "_01");
-				});
-				System.out.println(result.toString());
-				return (HashMap) result;
-			}
-		};
+	public AsyncItemProcessor asyncItemProcessor() throws InterruptedException {
+		AsyncItemProcessor<HashMap, HashMap> asyncItemProcessor = new AsyncItemProcessor<>();
+		asyncItemProcessor.setDelegate(customItemProcessor());
+		asyncItemProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
+//		asyncItemProcessor.afterPropertiesSet();
+		return asyncItemProcessor;
+	}
+
+	@Bean
+	public AsyncItemWriter asyncItemWriter() throws Exception {
+		AsyncItemWriter<HashMap> asyncItemWriter = new AsyncItemWriter<>();
+		asyncItemWriter.setDelegate(customItemWriter());
+		return asyncItemWriter;
 	}
 }
