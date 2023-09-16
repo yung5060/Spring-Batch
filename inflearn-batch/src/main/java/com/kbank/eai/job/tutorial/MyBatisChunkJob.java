@@ -1,6 +1,10 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.MyBatisBatchItemWriter;
@@ -18,13 +22,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
+import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class MyBatisChunkJob {
 
