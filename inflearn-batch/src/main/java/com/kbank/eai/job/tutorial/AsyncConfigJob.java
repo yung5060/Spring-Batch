@@ -1,12 +1,10 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.tutorial;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
-import com.kbank.eai.listener.CustomChunkListener;
-import com.kbank.eai.listener.StopWatchJobListener;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
@@ -25,12 +23,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
-@Configuration
+import com.kbank.eai.listener.CustomChunkListener;
+import com.kbank.eai.listener.StopWatchJobListener;
+
+import lombok.RequiredArgsConstructor;
+
+//@Configuration
 @RequiredArgsConstructor
 public class AsyncConfigJob {
 
@@ -68,8 +68,8 @@ public class AsyncConfigJob {
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
 				.incrementer(new RunIdIncrementer())
-				.start(step1())
-//				.start(asyncStep1())
+//				.start(step1())
+				.start(asyncStep1())
 				.listener(new StopWatchJobListener())
 				.build();
 	}
