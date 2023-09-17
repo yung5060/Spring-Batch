@@ -68,8 +68,8 @@ public class AsyncConfigJob {
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
 				.incrementer(new RunIdIncrementer())
-//				.start(step1())
-				.start(asyncStep1())
+				.start(step1())
+//				.start(asyncStep1())
 				.listener(new StopWatchJobListener())
 				.build();
 	}
@@ -114,9 +114,9 @@ public class AsyncConfigJob {
 				Map<String, String> result = new HashMap<>();
 				item.forEach((key, value) -> {
 					if("email".equals((String) key)) {
-						result.put("email", item.get("email").toString().replaceFirst("eai", "fep"));
-					} else if ("phone".equals((String) key)){
-						result.put("phone", "+82" + " " + value.toString());
+						result.put("email", item.get("email").toString().replaceFirst("fep", "mci"));
+//					} else if ("phone".equals((String) key)){
+//						result.put("phone", "+82" + " " + value.toString());
 					} else {
 						result.put((String) key, (String) value);
 					}
