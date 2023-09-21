@@ -85,7 +85,7 @@ public class MultiThreadStepConfigJob {
 					HashMap<String, String> result = new HashMap<>();
 					item.forEach((key, value) -> {
 						if("email".equals((String) key)) {
-							result.put("email", ((String) value).replaceFirst("eai", "fep"));
+							result.put("email", ((String) value).replaceFirst("fep", "mci"));
 						} else {
 							result.put((String) key, (String) value);
 						}
@@ -96,7 +96,7 @@ public class MultiThreadStepConfigJob {
 				.listener(new CustomItemProcessListener())
 				.writer(customItemWriter())
 				.listener(new CustomItemWriteListener())
-				.taskExecutor(taskExecutor())
+//				.taskExecutor(taskExecutor())
 				.listener(new CustomChunkListener())
 				.build();
 	}
