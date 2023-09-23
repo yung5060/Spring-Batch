@@ -25,7 +25,7 @@ import com.kbank.eai.tasklet.CustomTasklet;
 
 import lombok.RequiredArgsConstructor;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class ParallelStepConfigJob {
 	

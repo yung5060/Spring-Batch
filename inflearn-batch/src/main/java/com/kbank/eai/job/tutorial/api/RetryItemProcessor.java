@@ -2,7 +2,7 @@ package com.kbank.eai.job.tutorial.api;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.kbank.eai.job.template.RetryableException;
+import com.kbank.eai.job.tutorial.template.RetryableException;
 
 public class RetryItemProcessor implements ItemProcessor<String, String> {
 

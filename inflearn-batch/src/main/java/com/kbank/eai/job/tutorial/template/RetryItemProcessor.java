@@ -1,4 +1,4 @@
-package com.kbank.eai.job.template;
+package com.kbank.eai.job.tutorial.template;
 
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;

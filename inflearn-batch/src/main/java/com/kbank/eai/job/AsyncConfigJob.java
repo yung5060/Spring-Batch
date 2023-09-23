@@ -1,10 +1,8 @@
-package com.kbank.eai.job.tutorial;
+package com.kbank.eai.job;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
+import com.kbank.eai.listener.CustomChunkListener;
+import com.kbank.eai.listener.StopWatchJobListener;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
@@ -23,14 +21,14 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
-import com.kbank.eai.listener.CustomChunkListener;
-import com.kbank.eai.listener.StopWatchJobListener;
+import javax.sql.DataSource;
+import java.util.HashMap;
+import java.util.Map;
 
-import lombok.RequiredArgsConstructor;
-
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class AsyncConfigJob {
 
@@ -68,8 +66,8 @@ public class AsyncConfigJob {
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
 				.incrementer(new RunIdIncrementer())
-//				.start(step1())
-				.start(asyncStep1())
+				.start(step1())
+//				.start(asyncStep1())
 				.listener(new StopWatchJobListener())
 				.build();
 	}
@@ -115,8 +113,6 @@ public class AsyncConfigJob {
 				item.forEach((key, value) -> {
 					if("email".equals((String) key)) {
 						result.put("email", item.get("email").toString().replaceFirst("fep", "mci"));
-//					} else if ("phone".equals((String) key)){
-//						result.put("phone", "+82" + " " + value.toString());
 					} else {
 						result.put((String) key, (String) value);
 					}
@@ -136,11 +132,10 @@ public class AsyncConfigJob {
 	}
 
 	@Bean
-	public AsyncItemProcessor asyncItemProcessor() throws InterruptedException {
+	public AsyncItemProcessor asyncItemProcessor() throws Exception {
 		AsyncItemProcessor<HashMap, HashMap> asyncItemProcessor = new AsyncItemProcessor<>();
 		asyncItemProcessor.setDelegate(customItemProcessor());
 		asyncItemProcessor.setTaskExecutor(new SimpleAsyncTaskExecutor());
-//		asyncItemProcessor.afterPropertiesSet();
 		return asyncItemProcessor;
 	}
 

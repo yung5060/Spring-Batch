@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.retry.RetryPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 
-import com.kbank.eai.job.template.RetryableException;
+import com.kbank.eai.job.tutorial.template.RetryableException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
