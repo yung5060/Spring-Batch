@@ -1,6 +1,5 @@
 package com.kbank.eai.job;
 
-import com.kbank.eai.listener.CustomChunkListener;
 import com.kbank.eai.partitioner.ColumnRangePartitioner;
 import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -11,6 +10,7 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.partition.support.Partitioner;
 import org.springframework.batch.item.ItemProcessor;
@@ -25,8 +25,9 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.Map;
 
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class PartitioningJob {
 
@@ -82,12 +83,12 @@ public class PartitioningJob {
     public Step slaveStep() throws Exception {
         return stepBuilderFactory.get("slaveStep")
                 .<HashMap, HashMap>chunk(chunkSize)
-                .reader(pagingItemReader())
+                .reader(pagingItemReader(null, null))
                 .processor((ItemProcessor<HashMap, HashMap>) item -> {
                     HashMap<String, String> result = new HashMap<>();
                     item.forEach((key, value) -> {
                         if("email".equals((String) key)) {
-                            result.put("email", ((String) value).replaceFirst("fep", "mci"));
+                            result.put("email", ((String) value).replaceFirst("eai", "mci"));
                         } else {
                             result.put((String) key, (String) value);
                         }
@@ -96,7 +97,6 @@ public class PartitioningJob {
                     return result;
                 })
                 .writer(pagingItemWriter())
-                .listener(new CustomChunkListener())
                 .build();
     }
 
@@ -110,15 +110,28 @@ public class PartitioningJob {
     }
 
     @Bean
-    public ItemReader<HashMap> pagingItemReader() throws Exception {
+    @StepScope
+    public ItemReader<HashMap> pagingItemReader(
+            @Value("#{stepExecutionContext['minValue']}") Long minValue,
+            @Value("#{stepExecutionContext['maxValue']}") Long maxValue
+    ) throws Exception {
+
+        System.out.println("reading : " + minValue + " to " + maxValue);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("minValue", minValue);
+        params.put("maxValue", maxValue);
+
         return new MyBatisPagingItemReaderBuilder<HashMap>()
                 .sqlSessionFactory(sqlSessionFactory_SRC())
                 .queryId(mapperName + ".select")
                 .pageSize(chunkSize)
+                .parameterValues(params)
                 .build();
     }
 
     @Bean
+    @StepScope
     public ItemWriter<HashMap> pagingItemWriter() throws Exception {
         return new MyBatisBatchItemWriterBuilder<HashMap>()
                 .sqlSessionFactory(sqlSessionFactory_DST())
