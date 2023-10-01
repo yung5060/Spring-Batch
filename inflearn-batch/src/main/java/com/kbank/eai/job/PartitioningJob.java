@@ -88,7 +88,7 @@ public class PartitioningJob {
                     HashMap<String, String> result = new HashMap<>();
                     item.forEach((key, value) -> {
                         if("email".equals((String) key)) {
-                            result.put("email", ((String) value).replaceFirst("eai", "mci"));
+                            result.put("email", ((String) value).replaceFirst("eai", "fep"));
                         } else {
                             result.put((String) key, (String) value);
                         }
