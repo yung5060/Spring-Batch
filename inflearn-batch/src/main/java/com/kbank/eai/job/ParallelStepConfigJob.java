@@ -1,7 +1,8 @@
 package com.kbank.eai.job;
 
-import javax.sql.DataSource;
-
+import com.kbank.eai.listener.StopWatchJobListener;
+import com.kbank.eai.tasklet.CustomTasklet;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.batch.core.Job;
@@ -20,12 +21,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.kbank.eai.listener.StopWatchJobListener;
-import com.kbank.eai.tasklet.CustomTasklet;
+import javax.sql.DataSource;
 
-import lombok.RequiredArgsConstructor;
-
-//@Configuration
+@Configuration
 @RequiredArgsConstructor
 public class ParallelStepConfigJob {
 

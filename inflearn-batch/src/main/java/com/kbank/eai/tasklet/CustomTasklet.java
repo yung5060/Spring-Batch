@@ -30,7 +30,7 @@ public class CustomTasklet implements Tasklet {
 	public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 
 		synchronized (lock) {
-			for(int i = 0; i < 100; i++) {
+			for(int i = 0; i < 1000000000; i++) {
 //				sum.incrementAndGet();
 				sum++;
 			}
