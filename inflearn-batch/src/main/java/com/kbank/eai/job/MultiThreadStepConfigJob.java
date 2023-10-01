@@ -34,10 +34,10 @@ import lombok.RequiredArgsConstructor;
 //@Configuration
 @RequiredArgsConstructor
 public class MultiThreadStepConfigJob {
-	
+
 	@Value("${mapper}")
 	private String mapperName;
-	
+
 	@Value("${chunk}")
 	private int chunkSize;
 
@@ -48,7 +48,7 @@ public class MultiThreadStepConfigJob {
 	private final DataSource srcDataSource;
 	@Qualifier("dstDataSource")
 	private final DataSource dstDataSource;
-	
+
 	@Bean
 	public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
@@ -56,7 +56,7 @@ public class MultiThreadStepConfigJob {
 		sessionFactoryBean.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
 		return sessionFactoryBean.getObject();
 	}
-	
+
 	@Bean
 	public SqlSessionFactory sqlSessionFactory_DST() throws Exception {
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
@@ -64,7 +64,7 @@ public class MultiThreadStepConfigJob {
 		sessionFactoryBean.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
 		return sessionFactoryBean.getObject();
 	}
-	
+
 	@Bean
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
@@ -73,7 +73,7 @@ public class MultiThreadStepConfigJob {
 				.listener(new StopWatchJobListener())
 				.build();
 	}
-	
+
 	@Bean
 	public Step step1() throws Exception {
 		return stepBuilderFactory.get("step1")
@@ -99,7 +99,7 @@ public class MultiThreadStepConfigJob {
 				.listener(new CustomChunkListener())
 				.build();
 	}
-	
+
 	@Bean
 	public TaskExecutor taskExecutor() {
 		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
@@ -108,7 +108,7 @@ public class MultiThreadStepConfigJob {
 		taskExecutor.setThreadNamePrefix("async_thread_");
 		return taskExecutor;
 	}
-	
+
 	@Bean
 	public MyBatisPagingItemReader<HashMap> pagingItemReader() throws Exception {
 		return new MyBatisPagingItemReaderBuilder<HashMap>()
@@ -117,7 +117,7 @@ public class MultiThreadStepConfigJob {
 				.pageSize(chunkSize)
 				.build();
 	}
-	
+
 	@Bean
 	public ItemWriter<HashMap> customItemWriter() throws Exception {
 		return new MyBatisBatchItemWriterBuilder<HashMap>()

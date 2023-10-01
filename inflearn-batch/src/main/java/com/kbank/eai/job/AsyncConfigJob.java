@@ -21,14 +21,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
-@Configuration
+//@Configuration
 @RequiredArgsConstructor
 public class AsyncConfigJob {
 
@@ -108,7 +107,7 @@ public class AsyncConfigJob {
 		return new ItemProcessor<HashMap, HashMap>() {
 			@Override
 			public HashMap process(HashMap item) throws Exception {
-				Thread.sleep(100);
+//				Thread.sleep(100);
 				Map<String, String> result = new HashMap<>();
 				item.forEach((key, value) -> {
 					if("email".equals((String) key)) {
