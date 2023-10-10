@@ -7,58 +7,61 @@ import javax.sql.DataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
 import org.mybatis.spring.batch.MyBatisPagingItemReader;
 import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
 import org.mybatis.spring.batch.builder.MyBatisPagingItemReaderBuilder;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.JobScope;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import com.kbank.eai.listener.CustomChunkListener;
-import com.kbank.eai.listener.CustomItemProcessListener;
-import com.kbank.eai.listener.CustomItemReadListener;
-import com.kbank.eai.listener.CustomItemWriteListener;
-import com.kbank.eai.listener.StopWatchJobListener;
+@Configuration
+public class SynchronizedConfigJob {
 
-import lombok.RequiredArgsConstructor;
-
-//@Configuration
-@RequiredArgsConstructor
-public class MultiThreadStepConfigJob {
-
-	@Value("${mapper}")
+	
 	private String mapperName;
-
-	@Value("${chunk}")
 	private int chunkSize;
-
+	
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final ApplicationContext context;
+	private final DataSource srcDataSrouce;
+	private final DataSource dstDataSource;
+	
+	
 	@Autowired
-	@Qualifier("srcDataSource")
-	private DataSource srcDataSource;
-	@Autowired
-	@Qualifier("dstDataSource")
-	private DataSource dstDataSource;
+	public SynchronizedConfigJob(@Value("${mapper}") String mapperName, @Value("${chunk}") int chunkSize, 
+			JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, ApplicationContext context, 
+			@Qualifier("srcDataSource") DataSource srcDataSrouce, @Qualifier("dstDataSource") DataSource dstDataSource) {
+		super();
+		this.mapperName = mapperName;
+		this.chunkSize = chunkSize;
+		this.jobBuilderFactory = jobBuilderFactory;
+		this.stepBuilderFactory = stepBuilderFactory;
+		this.context = context;
+		this.srcDataSrouce = srcDataSrouce;
+		this.dstDataSource = dstDataSource;
+	}
 
 	@Bean
 	public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {
-		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-		sessionFactoryBean.setDataSource(srcDataSource);
-		sessionFactoryBean.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
-		return sessionFactoryBean.getObject();
+		SqlSessionFactoryBean sqlSessionFactoryBean_SRC = new SqlSessionFactoryBean();
+		sqlSessionFactoryBean_SRC.setDataSource(srcDataSrouce);
+		sqlSessionFactoryBean_SRC.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
+		return sqlSessionFactoryBean_SRC.getObject();
 	}
 	
 	@Bean
@@ -68,10 +71,15 @@ public class MultiThreadStepConfigJob {
 
 	@Bean
 	public SqlSessionFactory sqlSessionFactory_DST() throws Exception {
-		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();
-		sessionFactoryBean.setDataSource(dstDataSource);
-		sessionFactoryBean.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
-		return sessionFactoryBean.getObject();
+		SqlSessionFactoryBean sqlSessionFactoryBean_DST = new SqlSessionFactoryBean();
+		sqlSessionFactoryBean_DST.setDataSource(dstDataSource);
+		sqlSessionFactoryBean_DST.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
+		return sqlSessionFactoryBean_DST.getObject();
+	}
+	
+	@Bean
+	public SqlSessionTemplate sqlSessionTemplate_DST() throws Exception {
+		return new SqlSessionTemplate(sqlSessionFactory_DST());
 	}
 
 	@Bean
@@ -79,59 +87,57 @@ public class MultiThreadStepConfigJob {
 		return jobBuilderFactory.get("batchJob")
 				.incrementer(new RunIdIncrementer())
 				.start(step1())
-				.listener(new StopWatchJobListener())
 				.build();
 	}
 
 	@Bean
+	@JobScope
 	public Step step1() throws Exception {
 		return stepBuilderFactory.get("step1")
 				.<HashMap, HashMap>chunk(chunkSize)
-				.reader(pagingItemReader())
-				.listener(new CustomItemReadListener())
+				.reader(customItemReader())
 				.processor((ItemProcessor<HashMap, HashMap>) item -> {
 					HashMap<String, String> result = new HashMap<>();
 					item.forEach((key, value) -> {
 						if("email".equals((String) key)) {
-							result.put("email", ((String) value).replaceFirst("fep", "mci"));
+							result.put("email", ((String) value).replaceFirst("fep", "eai"));
 						} else {
 							result.put((String) key, (String) value);
 						}
 					});
-//					System.out.println(result.toString());
+					System.out.println(result.toString());
 					return result;
 				})
-				.listener(new CustomItemProcessListener())
 				.writer(customItemWriter())
-				.listener(new CustomItemWriteListener())
-//				.taskExecutor(taskExecutor())
-				.listener(new CustomChunkListener())
+				.taskExecutor(taskExecutor())
 				.build();
 	}
-
+	
 	@Bean
-	public TaskExecutor taskExecutor() {
-		ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-		taskExecutor.setCorePoolSize(4);
-		taskExecutor.setMaxPoolSize(8);
-		taskExecutor.setThreadNamePrefix("async_thread_");
-		return taskExecutor;
-	}
-
-	@Bean
-	public MyBatisPagingItemReader<HashMap> pagingItemReader() throws Exception {
+	@StepScope
+	public MyBatisPagingItemReader<HashMap> customItemReader() throws Exception {
 		return new MyBatisPagingItemReaderBuilder<HashMap>()
-				.sqlSessionFactory(sqlSessionFactory_SRC())
-				.queryId(mapperName + ".select")
-				.pageSize(chunkSize)
-				.build();
+                .sqlSessionFactory(sqlSessionFactory_SRC())
+                .queryId(mapperName + ".select")
+                .pageSize(chunkSize)
+                .build();
 	}
-
+	
 	@Bean
-	public ItemWriter<HashMap> customItemWriter() throws Exception {
+	@StepScope
+	public MyBatisBatchItemWriter<HashMap> customItemWriter() throws Exception {
 		return new MyBatisBatchItemWriterBuilder<HashMap>()
 				.sqlSessionFactory(sqlSessionFactory_DST())
 				.statementId(mapperName + ".insert")
 				.build();
+	}
+	
+	@Bean
+	public TaskExecutor taskExecutor() {
+		ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+		executor.setCorePoolSize(4);
+		executor.setMaxPoolSize(8);
+		executor.setThreadNamePrefix("not-safety-thread-");
+		return executor;
 	}
 }

@@ -1,7 +1,10 @@
 package com.kbank.eai.job;
 
-import com.kbank.eai.partitioner.ColumnRangePartitioner;
-import lombok.RequiredArgsConstructor;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.sql.DataSource;
+
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.batch.builder.MyBatisBatchItemWriterBuilder;
@@ -20,14 +23,13 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
+import com.kbank.eai.partitioner.ColumnRangePartitioner;
 
-@Configuration
+import lombok.RequiredArgsConstructor;
+
+//@Configuration
 @RequiredArgsConstructor
 public class PartitioningJob {
 
@@ -88,7 +90,7 @@ public class PartitioningJob {
                     HashMap<String, String> result = new HashMap<>();
                     item.forEach((key, value) -> {
                         if("email".equals((String) key)) {
-                            result.put("email", ((String) value).replaceFirst("eai", "fep"));
+                            result.put("email", ((String) value).replaceFirst("fep", "eai"));
                         } else {
                             result.put((String) key, (String) value);
                         }

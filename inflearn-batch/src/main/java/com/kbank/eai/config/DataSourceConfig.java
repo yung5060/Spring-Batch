@@ -5,11 +5,11 @@ import java.sql.SQLException;
 import javax.sql.DataSource;
 
 import org.jasypt.encryption.StringEncryptor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import com.kbank.eai.dto.DataSourceInfo;
 
@@ -25,14 +25,14 @@ public class DataSourceConfig {
 	private final StringEncryptor encryptor;
 	
 	@Bean
+	@Primary
 	public DataSource dataSource() throws SQLException {
 		DataSource ds = null;
 		return findDs("LOCAL", ds);
 	}
 
 
-	@Bean
-	@Qualifier(value = "srcDataSource")
+	@Bean(name = "srcDataSource")
 	public DataSource srcDataSource(@Value("${sBiz}") String sBiz) throws SQLException {
 		log.info("SRC: " + sBiz);
 		DataSource ds = null;
@@ -40,8 +40,7 @@ public class DataSourceConfig {
 	}
 	
 
-	@Bean
-	@Qualifier(value = "dstDataSource")
+	@Bean(name = "dstDataSource")
 	public DataSource dstDataSource(@Value("${dBiz}") String dBiz) throws SQLException {
 		log.info("DST: " + dBiz);
 		DataSource ds = null;

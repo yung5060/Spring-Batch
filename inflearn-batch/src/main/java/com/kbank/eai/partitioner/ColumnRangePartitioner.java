@@ -5,10 +5,13 @@ import org.springframework.batch.item.ExecutionContext;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import lombok.Setter;
+
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
+@Setter
 public class ColumnRangePartitioner implements Partitioner {
 
     private JdbcOperations jdbcTemplate;
@@ -17,12 +20,6 @@ public class ColumnRangePartitioner implements Partitioner {
 
     private String column;
 
-    public void setTable(String table) {
-        this.table = table;
-    }
-    public void setColumn(String column) {
-        this.column = column;
-    }
     public void setDataSource(DataSource dataSource) {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }

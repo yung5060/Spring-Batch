@@ -3,8 +3,8 @@
 
 <mapper namespace="Mapper">
 
-    <select id="select" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT address
+<!--     <select id="selectWithMinMax" parameterType="java.util.HashMap" resultType="java.util.HashMap"> 
+    	SELECT address
             , email
             , name
             , phone
@@ -14,9 +14,19 @@
             id <![CDATA[>=]]> #{minValue}
         AND
             id <![CDATA[<=]]> #{maxValue}
-<!--        LIMIT #{_pagesize} OFFSET #{_skiprows}-->
-    </select>
+        LIMIT #{_pagesize} OFFSET #{_skiprows}
+    </select>	--> 
 
+    <select id="select" parameterType="java.util.HashMap" resultType="java.util.HashMap"> 
+    		SELECT address
+            , email
+            , name
+            , phone
+        FROM
+            customer2
+        LIMIT #{_pagesize} OFFSET #{_skiprows}
+    </select>
+    
     <insert id="insert" parameterType="java.util.HashMap">
         INSERT INTO customer2 (
             address
