@@ -39,7 +39,6 @@ public class SynchronizedConfigJob {
 	private final DataSource srcDataSource;
 	private final DataSource dstDataSource;
 	
-	
 	@Autowired
 	public SynchronizedConfigJob(@Value("${mapper}") String mapperName, @Value("${chunk}") int chunkSize, 
 			JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, ApplicationContext context, 
