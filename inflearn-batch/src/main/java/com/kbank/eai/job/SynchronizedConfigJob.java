@@ -1,9 +1,5 @@
 package com.kbank.eai.job;
 
-import java.util.HashMap;
-
-import javax.sql.DataSource;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -28,43 +24,46 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import javax.sql.DataSource;
+import java.util.HashMap;
+
 @Configuration
 public class SynchronizedConfigJob {
 
 	
-	private String mapperName;
-	private int chunkSize;
-	
+	private final String mapperName;
+	private final int chunkSize;
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
 	private final ApplicationContext context;
-	private final DataSource srcDataSrouce;
+	private final DataSource srcDataSource;
 	private final DataSource dstDataSource;
 	
 	
 	@Autowired
 	public SynchronizedConfigJob(@Value("${mapper}") String mapperName, @Value("${chunk}") int chunkSize, 
 			JobBuilderFactory jobBuilderFactory, StepBuilderFactory stepBuilderFactory, ApplicationContext context, 
-			@Qualifier("srcDataSource") DataSource srcDataSrouce, @Qualifier("dstDataSource") DataSource dstDataSource) {
+			@Qualifier("srcDataSource") DataSource srcDataSource, @Qualifier("dstDataSource") DataSource dstDataSource) {
 		super();
 		this.mapperName = mapperName;
 		this.chunkSize = chunkSize;
 		this.jobBuilderFactory = jobBuilderFactory;
 		this.stepBuilderFactory = stepBuilderFactory;
 		this.context = context;
-		this.srcDataSrouce = srcDataSrouce;
+		this.srcDataSource= srcDataSource;
 		this.dstDataSource = dstDataSource;
 	}
 
 	@Bean
 	public SqlSessionFactory sqlSessionFactory_SRC() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactoryBean_SRC = new SqlSessionFactoryBean();
-		sqlSessionFactoryBean_SRC.setDataSource(srcDataSrouce);
+		sqlSessionFactoryBean_SRC.setDataSource(srcDataSource);
 		sqlSessionFactoryBean_SRC.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
 		return sqlSessionFactoryBean_SRC.getObject();
 	}
 	
-	@Bean
+	//정확한 이유는 모르겠지만... 계속해서 SqlSessionTemplate 빈을 자동으로 생성하려고 하는데... 이때 의존성(SqlSessionFactory) 주입 충돌이 일어나서 직접 주입해줌 
+	@Bean	
 	public SqlSessionTemplate sqlSessionTemplate_SRC() throws Exception {
 		return new SqlSessionTemplate(sqlSessionFactory_SRC());
 	}
@@ -77,11 +76,6 @@ public class SynchronizedConfigJob {
 		return sqlSessionFactoryBean_DST.getObject();
 	}
 	
-	@Bean
-	public SqlSessionTemplate sqlSessionTemplate_DST() throws Exception {
-		return new SqlSessionTemplate(sqlSessionFactory_DST());
-	}
-
 	@Bean
 	public Job batchJob() throws Exception {
 		return jobBuilderFactory.get("batchJob")
@@ -109,7 +103,7 @@ public class SynchronizedConfigJob {
 					return result;
 				})
 				.writer(customItemWriter())
-				.taskExecutor(taskExecutor())
+//				.taskExecutor(taskExecutor())
 				.build();
 	}
 	
