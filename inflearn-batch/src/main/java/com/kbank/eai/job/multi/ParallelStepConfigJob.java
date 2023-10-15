@@ -1,4 +1,4 @@
-package com.kbank.eai.job;
+package com.kbank.eai.job.multi;
 
 import com.kbank.eai.listener.StopWatchJobListener;
 import com.kbank.eai.tasklet.CustomTasklet;

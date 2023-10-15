@@ -1,33 +1,31 @@
 jdbc:
-  list:
-    - system: LOCAL
-      driverClassName: org.h2.Driver
-      url: jdbc:h2:mem:localdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-      username: sa
-      password:
+    list:
+        -   system: LOCAL
+            driverClassName: org.h2.Driver
+            url: jdbc:h2:mem:localdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+            username: sa
+            password:
 
-    - system: LOG
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: ENC(i05sHkXbYF7InI0hb5OyFukkm+OM4jti)
+        -   system: LOG
+            driverClassName: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://localhost:3306/logdb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+            username: root
+            password: ENC(i05sHkXbYF7InI0hb5OyFukkm+OM4jti)
 
-    - system: EAI
-      driverClassName: com.mysql.cj.jdbc.Driver
-      url: jdbc:mysql://localhost:3306/mysqldb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
-      username: root
-      password: ENC(i05sHkXbYF7InI0hb5OyFukkm+OM4jti)
-      
-      #    - system: MCI
-      #      driverClassName: org.apache.derby.jdbc.ClientDriver
-      #      url: jdbc:derby://localhost:11527/iGate;create=false
-      #      username: igate
-      #      password: ENC(PgKZ/q4KwTi0EI7DRdTFiA==)
+        -   system: EAI
+            driverClassName: com.mysql.cj.jdbc.Driver
+            url: jdbc:mysql://localhost:3306/mysqldb?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true
+            username: root
+            password: ENC(i05sHkXbYF7InI0hb5OyFukkm+OM4jti)
 
-    - system: FEP
-      driverClassName: org.postgresql.Driver
-      url: jdbc:postgresql://localhost:15432/postgresdb
-      username: postgres
-      password: ENC(BcPtlyq07EcbP9X73KSC3A==)
-      
-      
+            #    - system: MCI
+            #      driverClassName: org.apache.derby.jdbc.ClientDriver
+            #      url: jdbc:derby://localhost:11527/iGate;create=false
+            #      username: igate
+            #      password: ENC(PgKZ/q4KwTi0EI7DRdTFiA==)
+
+        -   system: FEP
+            driverClassName: org.postgresql.Driver
+            url: jdbc:postgresql://localhost:15432/postgresdb
+            username: postgres
+            password: ENC(BcPtlyq07EcbP9X73KSC3A==)
