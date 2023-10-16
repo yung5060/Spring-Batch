@@ -96,7 +96,8 @@ public class SynchronizedConfigJob {
 					});
 					System.out.println(result.toString());
 					return result;
-				}).writer(customItemWriter())
+				})
+				.writer(customItemWriter())
 //				.taskExecutor(taskExecutor())
 				.build();
 	}

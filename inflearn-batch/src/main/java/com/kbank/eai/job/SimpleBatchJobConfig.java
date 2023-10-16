@@ -1,12 +1,22 @@
 package com.kbank.eai.job;
 
+import java.util.HashMap;
+
 import javax.sql.DataSource;
 
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
+import org.mybatis.spring.batch.MyBatisBatchItemWriter;
+import org.mybatis.spring.batch.MyBatisPagingItemReader;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
+import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemReader;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,4 +72,52 @@ public class SimpleBatchJobConfig {
 		sqlSessionFactoryBean_DST.setMapperLocations(context.getResources("classpath:mappers/" + mapperName + ".xml"));
 		return sqlSessionFactoryBean_DST.getObject();
 	}
+	
+	@Bean
+	public Job batchJob() throws Exception {
+		return jobBuilderFactory.get("batchJob")
+				.incrementer(new RunIdIncrementer())
+				.start(step1())
+				.build();
+	}
+	
+	@Bean
+	public Step step1() throws Exception {
+		return stepBuilderFactory.get("step1")
+				.<HashMap, HashMap>chunk(chunkSize)
+				.reader(customItemReader())
+				.processor((ItemProcessor<HashMap, HashMap>) item -> {
+					HashMap<String, String> result = new HashMap<>();
+					item.forEach((key, value) -> {
+						if ("email".equals((String) key)) {
+							result.put("email", ((String) value).replaceFirst("eai", "fep"));
+						} else {
+							result.put((String) key, (String) value);
+						}
+					});
+					System.out.println(result.toString());
+					return result;
+				})
+				.writer(customItemWriter())
+				.build();
+	}
+	
+	@Bean
+	public ItemReader<HashMap> customItemReader() throws Exception {
+		MyBatisPagingItemReader<HashMap> customItemReader = new MyBatisPagingItemReader<>();
+		customItemReader.setSqlSessionFactory(sqlSessionFactory_SRC());
+		customItemReader.setQueryId(mapperName + ".select");
+		customItemReader.setPageSize(chunkSize);
+		return customItemReader;
+	}
+	
+	@Bean
+	public ItemWriter<HashMap> customItemWriter() throws Exception {
+		MyBatisBatchItemWriter<HashMap> customItemWriter = new MyBatisBatchItemWriter<HashMap>();
+		customItemWriter.setSqlSessionFactory(sqlSessionFactory_DST());
+		customItemWriter.setStatementId(mapperName + ".insert");
+		return customItemWriter;
+	}
+	
+	
 }
