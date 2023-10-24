@@ -2,12 +2,14 @@ package com.kbank.eai.batch.job.file;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JpaItemWriterBuilder;
@@ -61,6 +63,19 @@ public class FileJobConfig {
 				.reader(fileItemReader(null))
 				.processor(fileItemProcessor())
 				.writer(fileItemWriter())
+				.listener(new ChunkListener() {
+					
+					@Override
+					public void beforeChunk(ChunkContext context) {}
+					
+					@Override
+					public void afterChunkError(ChunkContext context) {}
+					
+					@Override
+					public void afterChunk(ChunkContext context) {
+						System.out.println("==============chunk done!!!==============");
+					}
+				})
 				.build();
 	}
 	
