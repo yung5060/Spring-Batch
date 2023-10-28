@@ -13,6 +13,8 @@ public class JobListener implements JobExecutionListener {
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		
+		long time = jobExecution.getEndTime().getTime() - jobExecution.getStartTime().getTime();
+		System.out.println("ÃÑ ¼Ò¿ä½Ã°£ = " + time);
 	}
 
 }

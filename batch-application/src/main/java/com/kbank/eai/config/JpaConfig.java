@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
@@ -35,6 +36,7 @@ public class JpaConfig {
 		return emFactory;
 	}
 	
+	@Primary
 	@Bean
 	@Qualifier("EntityManagerFactory_DST")
 	public LocalContainerEntityManagerFactoryBean entityManagerFactory_DST() {
